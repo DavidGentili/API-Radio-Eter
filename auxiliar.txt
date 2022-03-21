@@ -1,0 +1,8 @@
+Endpoints:{
+    users:{
+        /users/auth
+        /users/signup
+        /users/login
+    }
+    
+}
