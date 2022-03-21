@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const {mongodbURL} = require('./config');
 
-mongoose.connect('mongodb://localhost:27017/radioEterMdp')
+mongoose.connect(mongodbURL)
 .then( () => {
     console.log('Database connected'); 
 })

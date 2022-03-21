@@ -7,9 +7,9 @@ const UserSchema = new Schema({
     email: {type: String, required: true},
     password: {type: String, required: true},
     securityLevel: {type: String, required: true, default: 'editor'},
-    initialLog: {type: Date, default: Date.now()},
+    createdAt: {type: Date, default: Date.now()},
     LastLog: {type: Date}
-})
+},{ versionKey: false })
 
 UserSchema.methods.matchPassword = async function(password){
     return await bcrypt.compare(password, this.password);
