@@ -27,9 +27,9 @@ const loginUser = async (req) => {
         if(matchPassword)
             return {token: authenticateUser(currentUser)};
         else
-            throw {code: 400, response: {message: 'wrong password'}};
+            throw {code: 400, response: {message: 'wrong user/password'}};
     } else
-        throw {code: 400 , response: {message: 'the email is not registered'}}
+        throw {code: 400 , response: {message: 'wrong user/password'}}
 }
 
 router.post('/users/signup', isAuthenticated, (req,res) => {

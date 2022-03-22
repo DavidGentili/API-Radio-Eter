@@ -1,7 +1,7 @@
 const express = require('express');
-const res = require('express/lib/response');
 const app = express();
 const bodyParser = require('body-parser');
+const {port} = require('./config');
 
 //Middlewares
 app.use(bodyParser.json());
@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 //Routes
 app.use(require('./routes/users'));
 
-app.set('port', process.env.PORT || 3000)
+app.set('port', port || 3000)
 
 app.get('/', (req,res) => {
     res.json({message: 'welcome to the Radio Eter API'})

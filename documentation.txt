@@ -4,4 +4,11 @@ Endpoints:{
         /users/signup
         /users/login
     }
-    
+}
+
+Middlewares:{
+    isAuthenticated: si el usuario no tiene autentificacion no tiene permitido acceder, por ende se retornar un 403, en caso de que cuente con una autorizacion, se crea el elemento user dentro del req, con los datos del usuario.
+}
+    users/signup (POST) : si el usuario, no es de nivel maestro se retorna un 403, caso contrario, si los valores son correctos, esto quiere decir que el mail no es repetido, el nivel de seguridad es apto, y tanto el mail, el nombre y la contraseña no son nulos, indefinidos o vacios, se crea el usuario
+
+
