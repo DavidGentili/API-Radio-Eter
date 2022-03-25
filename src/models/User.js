@@ -7,6 +7,7 @@ const UserSchema = new Schema({
     email: {type: String, required: true},
     password: {type: String, required: true},
     securityLevel: {type: String, required: true, default: 'editor'},
+    state: {type: String, required: true, default: 'active'},
     createdAt: {type: Date, default: Date.now()},
     LastLog: {type: Date}
 },{ versionKey: false })

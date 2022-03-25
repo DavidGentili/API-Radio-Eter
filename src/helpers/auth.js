@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { getFormatUser } = require('./formatData');
 const {privateKey} = require('../config');
 
 const isAuthenticated = (req, res, next) => {  
@@ -13,16 +14,9 @@ const isAuthenticated = (req, res, next) => {
     }
 }
 
-const getFormatUser = (objectUser) => {
-    const keys = ['name', 'email', 'securityLevel', 'createdAt']
-    const user = {};
-    user.id = objectUser.id;
-    keys.forEach(key => user[key] = objectUser[key]);
-    return {user};
-}
-
 const authenticateUser = (objectUser) => {
-    return jwt.sign(getFormatUser(objectUser), privateKey,{
+    const user = getFormatUser(objectUser);
+    return jwt.sign({user}, privateKey,{
         expiresIn: "24h"
     });
 } 
