@@ -12,7 +12,7 @@ app.use(require('./routes/users'));
 app.set('port', port || 3000)
 
 app.get('/', (req,res) => {
-    res.json({message: 'welcome to the Radio Eter API'})
+    res.json({message: 'welcome to the Radio Eter MDP API'})
 })
 
 app.listen(app.get('port'), () => {

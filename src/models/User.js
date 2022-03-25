@@ -15,10 +15,16 @@ UserSchema.methods.matchPassword = async function(password){
     return await bcrypt.compare(password, this.password);
 }
 
-UserSchema.pre('save', async function(){
+UserSchema.methods.hashPassword = async function(password){
     const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password,salt);
+    return await bcrypt.hash(password, salt)
+}
+
+UserSchema.pre('save', async function(){
+    this.password = await this.hashPassword(this.password);
     this.email = this.email.toLowerCase();
 })
+
+
 
 module.exports = mongoose.model('User', UserSchema);
