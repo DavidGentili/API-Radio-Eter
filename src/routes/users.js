@@ -3,14 +3,12 @@ const { isAuthenticated, authenticateUser } = require('../helpers/auth');
 const User = require('../models/User');
 const { checkUserData } = require('../helpers/checkData');
 const generator = require('generate-password');
-const { notifyNewUser } = require('../helpers/sendMail');
+const { notifyNewUser, notifyChangePassword } = require('../helpers/sendMail');
 const { getFormatUser } = require('../helpers/formatData');
 const securityLevels = require('../helpers/securityLvl');
-const res = require('express/lib/response');
 
 const signupUser = async (req) => {
     const {email, name, securityLevel} = req.body;
-    securityLevel = securityLevel.toLowerCase();
     const check = checkUserData({email,name,securityLevel}) 
     if(check !== true) // se constata que la informacion sea correcta
         throw {code: 400, response: {message: `incorrect ${check}`}};
@@ -20,13 +18,10 @@ const signupUser = async (req) => {
         throw {code: 400, response: {message: 'The mail that you are trying to register is already registered'}};
 
     const password = generator.generate({length: 10, numbers: true}); //Se genera una contraseña aleatoria al nuevo usuario
-    const newUser = new User({email, name, password, securityLevel});
+    const newUser = new User({email : email.toLowerCase(), name, password, securityLevel : securityLevel ? securityLevel.toLowerCase() : 'editor'});
     await newUser.save();
     notifyNewUser({email, name, password}); // Se notifica al nuevo usuario la creacion de la cuenta
-    return {message: 'User created successfully'};
-    
-    
-        
+    return {message: 'User created successfully'};  
 } 
 
 const loginUser = async (req) => {
@@ -52,6 +47,7 @@ const changePassword = async ({currentPassword, newPassword, id}) => {
         throw {code: 403, response: {message: 'authorization error'}}
     const hashPassword = await currentUser.hashPassword(newPassword)
     await User.findOneAndUpdate({id}, {password: hashPassword});
+    notifyChangePassword({name: currentUser.name, email : currentUser.email})
     return {message: 'the password was changed successful'}
 }
 
@@ -91,6 +87,7 @@ router.post('/users/signup', isAuthenticated, (req,res) => {
             res.json(response)
         })
         .catch((e) => {
+            console.log(e)
             const {code = 500, response = {message: 'Internal Server Error'}} = e;
             res.statusCode = code;
             res.json(response)
