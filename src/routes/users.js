@@ -46,7 +46,7 @@ const changePassword = async ({currentPassword, newPassword, id}) => {
     if(!currentUser || !matchPassword )
         throw {code: 403, response: {message: 'authorization error'}}
     const hashPassword = await currentUser.hashPassword(newPassword)
-    await User.findOneAndUpdate({id}, {password: hashPassword});
+    await User.findByIdAndUpdate(id, {password: hashPassword});
     notifyChangePassword({name: currentUser.name, email : currentUser.email})
     return {message: 'the password was changed successful'}
 }
