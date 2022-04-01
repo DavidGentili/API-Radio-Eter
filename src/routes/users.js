@@ -76,6 +76,16 @@ const getUsers = async (id, query) => {
     return {users: formatUser};
 }
 
+const deleteUser = async (id, user) => {
+    if(user.securityLevel.toLowerCase() !== 'master')
+        throw {code: 403, response: {message: 'the user not has the security level authorizated'}}
+    const currentUser = await User.findById(id);
+    if(!currentUser)
+        throw {code: 400, response: {message: 'wrong parameters'}};
+    await User.findByIdAndDelete(id);
+    return {message: 'the user was deleted successfully'}
+}
+
 router.post('/users/signup', isAuthenticated, (req,res) => {
     const {user} = req;
     if(user.securityLevel.toLowerCase() !== 'master'){
@@ -142,6 +152,19 @@ router.put('/users', isAuthenticated, (req, res) => {
 router.get('/users', isAuthenticated, (req, res) => {
     const { id } = req.user;
     getUsers(id, req.query)
+    .then((response) => {
+        res.status = 200;
+        res.json(response);
+    })
+    .catch((e) => {
+        const {code = 500, response = {message: 'Internal Server Error'}} = e;
+        res.statusCode = code;
+        res.json(response)
+    })
+})
+
+router.delete('/users', isAuthenticated, (req,res) => {
+    deleteUser(id, user)
     .then((response) => {
         res.status = 200;
         res.json(response);
