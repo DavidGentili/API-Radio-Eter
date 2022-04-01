@@ -164,6 +164,8 @@ router.get('/users', isAuthenticated, (req, res) => {
 })
 
 router.delete('/users', isAuthenticated, (req,res) => {
+    const { user } = req;
+    const { id } = req.body;
     deleteUser(id, user)
     .then((response) => {
         res.status = 200;
