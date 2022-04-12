@@ -20,7 +20,6 @@
     "nodemailer": "^6.7.3"
   },
   "devDependencies": {
-    "dotenv": "^16.0.0",
-    "mongose": "^0.0.2-security"
+    "dotenv": "^16.0.0"
   }
 }
