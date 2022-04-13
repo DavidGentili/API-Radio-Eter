@@ -28,12 +28,12 @@ const loginUser = async (req) => {
     const {email, password} = req.body;
     const currentUser = await User.findOne({email: email.toLowerCase()});
     if(!currentUser)
-        throw {code: 400 , response: {message: 'wrong user/password'}}
+        throw {code: 403 , response: {message: 'wrong user/password'}}
     const matchPassword = await currentUser.matchPassword(password);
     if(matchPassword)
         return {token: authenticateUser(currentUser)};
     else
-        throw {code: 400, response: {message: 'wrong user/password'}};
+        throw {code: 403, response: {message: 'wrong user/password'}};
     
         
 }
