@@ -2,8 +2,10 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const {port} = require('./config');
+const cors = require('cors');
 
 //Middlewares
+app.use(cors());
 app.use(bodyParser.json());
 
 //Routes

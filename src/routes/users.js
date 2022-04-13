@@ -178,4 +178,12 @@ router.delete('/users', isAuthenticated, (req,res) => {
     })
 })
 
+router.get('/users/auth',isAuthenticated, (req, res) => {
+    const {user} = req;
+    if(user){
+        res.status = 200;
+        res.json({autheticated: true});
+    }
+})
+
 module.exports = router;
