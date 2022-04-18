@@ -4,7 +4,7 @@ const User = require('../models/User');
 const { checkUserData } = require('../helpers/checkData');
 const generator = require('generate-password');
 const { notifyNewUser, notifyChangePassword } = require('../helpers/sendMail');
-const { getFormatUser } = require('../helpers/formatData');
+const { getFormatUser, getFormatParameters } = require('../helpers/formatData');
 const securityLevels = require('../helpers/securityLvl');
 
 const signupUser = async (req) => {
@@ -61,7 +61,7 @@ const updateUser = async ({ idUser, id, state, securityLevel }) => {
     if(!authorizatedUser || authorizatedUser.securityLevel !== 'master')
         throw {code: 403, response: {message: 'the user not has the security level authorizated'}}
 
-    const parameters = formatParameters({state, securityLevel}, ['state','securityLevel']);
+    const parameters = getFormatParameters({state, securityLevel}, ['state','securityLevel']);
     await User.findByIdAndUpdate(idUser, parameters);
     return { message: 'the user was update successfully'}
     
@@ -142,6 +142,7 @@ router.put('/users', isAuthenticated, (req, res) => {
         res.json(response);
     })
     .catch((e) => {
+        console.log(e);
         const {code = 500, response = {message: 'Internal Server Error'}} = e;
         res.statusCode = code;
         res.json(response)

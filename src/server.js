@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 //Routes
 app.use(require('./routes/users'));
 
-app.set('port', port || 3000)
+app.set('port', port || 5500)
 
 app.get('/', (req,res) => {
     res.json({message: 'welcome to the Radio Eter MDP API'})
