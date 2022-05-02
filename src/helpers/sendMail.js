@@ -3,6 +3,8 @@ const { userEmail, passwordEmail } = require('../config');
 const { newAccountMessage, changePasswordMessage } = require('./htmlMessages');
 
 const sendMail = async ({to, subject, text, html}) => {
+    if(!userEmail || !passwordEmail)
+        throw 'Error in environment variables'
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 465,
