@@ -6,10 +6,12 @@ const cors = require('cors');
 
 //Middlewares
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded( {extended: true}));
+app.use('/public', express.static('./public'))
 
 //Routes
 app.use(require('./routes/users'));
+app.use(require('./routes/publicity'));
 
 app.set('port', port || 5500)
 
