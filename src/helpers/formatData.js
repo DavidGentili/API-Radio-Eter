@@ -9,17 +9,6 @@ const getFormatParameters = (object, keys) => {
     return aux
 }
 
-const getFormatUser = (objectUser) => {
-    const keys = ['name', 'email', 'securityLevel', 'createdAt', 'state']
-    const user = {};
-    user.id = objectUser.id || objectUser._id;
-    keys.forEach(key => {
-        if(key !== 'password' && objectUser[key]) 
-            user[key] = objectUser[key]
-    });
-    return user;
-}
-
 const formatObjectResponse = (object) => {
     const keys = Object.keys(object);
     const exceptions = ['_id', 'password', '__v'];
