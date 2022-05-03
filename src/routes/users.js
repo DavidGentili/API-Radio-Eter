@@ -5,7 +5,13 @@ const { checkUserData } = require('../helpers/checkData');
 const generator = require('generate-password');
 const { notifyNewUser, notifyChangePassword } = require('../helpers/sendMail');
 const { getFormatUser, getFormatParameters } = require('../helpers/formatData');
-const securityLevels = require('../helpers/securityLvl');
+const { securityLevels, correctSecurityLevel } = require('../helpers/securityLvl');
+
+router.use('/users',(req, res, next) => {
+    req.securityLevelRequired = ['master'];
+    next();
+})
+
 
 const signupUser = async (req) => {
     const {email, name, securityLevel} = req.body;
@@ -58,9 +64,6 @@ const updateUser = async ({ idUser, id, state, securityLevel }) => {
         securityLevel = securityLevel.toLowerCase();
 
     const authorizatedUser = await User.findById(id);
-    if(!authorizatedUser || authorizatedUser.securityLevel !== 'master')
-        throw {code: 403, response: {message: 'the user not has the security level authorizated'}}
-
     const parameters = getFormatParameters({state, securityLevel}, ['state','securityLevel']);
     await User.findByIdAndUpdate(idUser, parameters);
     return { message: 'the user was update successfully'}
@@ -76,9 +79,7 @@ const getUsers = async (id, query) => {
     return {users: formatUser};
 }
 
-const deleteUser = async (id, user) => {
-    if(user.securityLevel.toLowerCase() !== 'master')
-        throw {code: 403, response: {message: 'the user not has the security level authorizated'}}
+const deleteUser = async (id) => {
     const currentUser = await User.findById(id);
     if(!currentUser)
         throw {code: 400, response: {message: 'wrong parameters'}};
@@ -86,23 +87,17 @@ const deleteUser = async (id, user) => {
     return {message: 'the user was deleted successfully'}
 }
 
-router.post('/users/signup', isAuthenticated, (req,res) => {
-    const {user} = req;
-    if(user.securityLevel.toLowerCase() !== 'master'){
-        res.statusCode = 403;
-        res.json({message: 'the user not has the security level authorizated'})
-    } else{
-        signupUser(req)
-        .then((response) => {
-            res.json(response)
-        })
-        .catch((e) => {
-            console.log(e)
-            const {code = 500, response = {message: 'Internal Server Error'}} = e;
-            res.statusCode = code;
-            res.json(response)
-        })
-    }
+router.post('/users/signup', isAuthenticated, correctSecurityLevel, (req,res) => {
+    signupUser(req)
+    .then((response) => {
+        res.json(response)
+    })
+    .catch((e) => {
+        console.log(e)
+        const {code = 500, response = {message: 'Internal Server Error'}} = e;
+        res.statusCode = code;
+        res.json(response)
+    })
     
 })
 
@@ -133,7 +128,7 @@ router.put('/users/password', isAuthenticated, (req,res) => {
     })
 })
 
-router.put('/users', isAuthenticated, (req, res) => {
+router.put('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { idUser, securityLevel, state } = req.body;
     const { id } = req.user;
     updateUser({ idUser, id, securityLevel, state })
@@ -150,7 +145,7 @@ router.put('/users', isAuthenticated, (req, res) => {
 
 })
 
-router.get('/users', isAuthenticated, (req, res) => {
+router.get('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { id } = req.user;
     getUsers(id, req.query)
     .then((response) => {
@@ -164,8 +159,7 @@ router.get('/users', isAuthenticated, (req, res) => {
     })
 })
 
-router.delete('/users', isAuthenticated, (req,res) => {
-    const { user } = req;
+router.delete('/users', isAuthenticated, correctSecurityLevel, (req,res) => {
     const { id } = req.body;
     deleteUser(id, user)
     .then((response) => {
