@@ -41,12 +41,43 @@
     path: /users
     method: get
     headers: authorization
-    return: 200 - {Users} || 4-- errorMessage
+    query: id (optional)
+    return: 200 - [Users] || 4-- errorMessage
 
-###### Edit User
+###### Delete User
     path: /users
     method: delete
     headers: authorization
     payload: id
     return: 200 - {checkMessage} || 4-- errorMessage
 
+#### Ads
+
+###### Create Ad
+    path: /ad
+    method: post
+    headers: authorization, Content-Type : multipart/form-data
+    payload: name, altText (notRequired), link (notRequired), type 
+    return: 200 - {checkMessage} || 4-- errorMessage
+
+###### Get Ad
+    path: /ad
+    method: post
+    headers: authorization, Content-Type : multipart/form-data
+    payload: adId, name (notRequired), altText (notRequired), link (notRequired), type (notRequired)
+    query: type (optional);
+    return: 200 - [ads] || 4-- errorMessage
+
+###### Update Ad
+    path: /ad
+    method: post
+    headers: authorization, Content-Type : multipart/form-data
+    payload: adId, name (notRequired), altText (notRequired), link (notRequired), type (notRequired)
+    return: 200 - {checkMessage} || 4-- errorMessage
+
+###### Delete Ad
+    path: /ad
+    method: Delete
+    headers: authorization, Content-Type : multipart/form-data
+    payload: adId
+    return: 200 - {checkMessage} || 4-- errorMessage
