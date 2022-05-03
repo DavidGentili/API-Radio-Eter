@@ -4,14 +4,14 @@ const { isAuthenticated } = require('../helpers/auth');
 const { host } = require('../config');
 const Publicity = require('../models/Publicity');
 const { correctSecurityLevel } = require('../helpers/securityLvl')
+const responseCodeError = require('../helpers/responseCodeError');
+
+
 
 router.use('/ad', (req , res, next) => {
     req.securityLevelRequired = ['admin', 'master'];
     next();
 })
-
-
-
 
 router.post('/ad', isAuthenticated, correctSecurityLevel, upload.single('ad'), async (req, res) => {
     const { name, altText, link, type} = req.body;
@@ -23,15 +23,19 @@ router.post('/ad', isAuthenticated, correctSecurityLevel, upload.single('ad'), a
         return { message: 'the ad was added successful' }
 
     } catch(e){
-        const {code = 500, response = {message: 'Internal Server Error'}} = e;
-        res.statusCode = code;
-        res.json(response)
+        responseCodeError(e, res)
     }
 })
 
 router.get('/ad', async (req, res) => {
-    const ads = await Publicity.find();
-    console.log(ads);
+    try{
+        const ads = await Publicity.find();
+        
+
+    } catch(e){
+        responseCodeError(e, res)
+    }
+    
 })
 
 

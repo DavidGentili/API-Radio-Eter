@@ -6,6 +6,7 @@ const generator = require('generate-password');
 const { notifyNewUser, notifyChangePassword } = require('../helpers/sendMail');
 const { getFormatUser, getFormatParameters } = require('../helpers/formatData');
 const { securityLevels, correctSecurityLevel } = require('../helpers/securityLvl');
+const responseCodeError = require('../helpers/responseCodeError');
 
 router.use('/users',(req, res, next) => {
     req.securityLevelRequired = ['master'];
@@ -93,10 +94,7 @@ router.post('/users/signup', isAuthenticated, correctSecurityLevel, (req,res) =>
         res.json(response)
     })
     .catch((e) => {
-        console.log(e)
-        const {code = 500, response = {message: 'Internal Server Error'}} = e;
-        res.statusCode = code;
-        res.json(response)
+        responseCodeError(e, res)
     })
     
 })
@@ -107,9 +105,7 @@ router.post('/users/login', (req,res) => {
         res.json(response)
     })
     .catch((e) => {
-        const {code = 500, response = {message: 'Internal Server Error'}} = e;
-        res.statusCode = code;
-        res.json(response)
+        responseCodeError(e, res)
     })
 })
 
@@ -122,9 +118,7 @@ router.put('/users/password', isAuthenticated, (req,res) => {
         res.json(response);
     })
     .catch((e) => {
-        const {code = 500, response = {message: 'Internal Server Error'}} = e;
-        res.statusCode = code;
-        res.json(response)
+        responseCodeError(e, res)
     })
 })
 
@@ -137,10 +131,7 @@ router.put('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
         res.json(response);
     })
     .catch((e) => {
-        console.log(e);
-        const {code = 500, response = {message: 'Internal Server Error'}} = e;
-        res.statusCode = code;
-        res.json(response)
+        responseCodeError(e, res)
     })
 
 })
@@ -153,9 +144,7 @@ router.get('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
         res.json(response);
     })
     .catch((e) => {
-        const {code = 500, response = {message: 'Internal Server Error'}} = e;
-        res.statusCode = code;
-        res.json(response)
+        responseCodeError(e, res)
     })
 })
 
@@ -167,9 +156,7 @@ router.delete('/users', isAuthenticated, correctSecurityLevel, (req,res) => {
         res.json(response);
     })
     .catch((e) => {
-        const {code = 500, response = {message: 'Internal Server Error'}} = e;
-        res.statusCode = code;
-        res.json(response)
+        responseCodeError(e, res)
     })
 })
 
@@ -178,6 +165,8 @@ router.get('/users/auth',isAuthenticated, (req, res) => {
     if(user){
         res.status = 200;
         res.json(user);
+    } else {
+        responseCodeError(undefined,res)
     }
 })
 
