@@ -6,7 +6,7 @@ const cors = require('cors');
 
 //Middlewares
 app.use(cors());
-app.use(bodyParser.urlencoded( {extended: true}));
+app.use(bodyParser.json());
 app.use('/public', express.static('./public'))
 
 //Routes
