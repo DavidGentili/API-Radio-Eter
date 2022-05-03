@@ -6,7 +6,7 @@ const getFormatParameters = (object, keys) => {
                 aux[key] = object[key];
         })
     }
-    return aux
+    return aux;
 }
 
 const formatObjectResponse = (object) => {
