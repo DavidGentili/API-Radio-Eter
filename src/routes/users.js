@@ -4,7 +4,7 @@ const User = require('../models/User');
 const { checkUserData } = require('../helpers/checkData');
 const generator = require('generate-password');
 const { notifyNewUser, notifyChangePassword } = require('../helpers/sendMail');
-const { getFormatUser, getFormatParameters } = require('../helpers/formatData');
+const { formatObjectResponse, getFormatParameters } = require('../helpers/formatData');
 const { securityLevels, correctSecurityLevel } = require('../helpers/securityLvl');
 const responseCodeError = require('../helpers/responseCodeError');
 
@@ -75,8 +75,8 @@ const getUsers = async (id, query) => {
     const queryParameters = {};
     if(query.id)
         queryParameters._id = query.id;
-    const users = await User.find(queryParameters);
-    const formatUser = users.map(user => getFormatUser(user));
+    const users = await User.find(queryParameters).lean();
+    const formatUser = users.map(user => formatObjectResponse(user));
     return {users: formatUser};
 }
 
@@ -144,6 +144,7 @@ router.get('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
         res.json(response);
     })
     .catch((e) => {
+        console.log(e);
         responseCodeError(e, res)
     })
 })
