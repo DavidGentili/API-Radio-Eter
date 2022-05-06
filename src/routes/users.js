@@ -38,7 +38,7 @@ const loginUser = async (req) => {
         throw {code: 403 , response: {message: 'wrong user/password'}}
     const matchPassword = await currentUser.matchPassword(password);
     if(matchPassword)
-        return {token: authenticateUser(currentUser)};
+        return {token: authenticateUser(await User.findById(currentUser._id).lean())};
     else
         throw {code: 403, response: {message: 'wrong user/password'}};
     
@@ -105,6 +105,7 @@ router.post('/users/login', (req,res) => {
         res.json(response)
     })
     .catch((e) => {
+        console.log(e);
         responseCodeError(e, res)
     })
 })

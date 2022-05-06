@@ -4,6 +4,7 @@ const { checkProgramData } = require('../helpers/checkData')
 const responseCodeError = require('../helpers/responseCodeError');
 const { isAuthenticated } = require('../helpers/auth');
 const { correctSecurityLevel } = require('../helpers/securityLvl');
+const { getFormatParameters, formatObjectResponse } = require('../helpers/formatData');
 
 router.use('/programs', (req , res, next) => {
     req.securityLevelRequired = ['admin', 'master'];
@@ -20,9 +21,9 @@ const createProgram = async (data) => {
     return { message: 'the program was created successfully'}
 }
 
-router.get('/programs', (req,res) => {
-    
-})
+const getPrograms = async (query) => {
+
+}
 
 router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     createProgram(req.body)
@@ -32,11 +33,21 @@ router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     .catch(e => {
         responseCodeError(e,res);
     })
-
-    
-    
-    res.json({message : 'all its ok'});
 })
+
+router.get('/programs', async (req,res) => {
+    try{
+        const parameters = getFormatParameters(req.query, ['highlighted', 'id']);
+        const programs = await Program.find(parameters);
+        const formatResponse = Array.isArray(programs) ? programs.map(program => formatObjectResponse(program)) : [formatObjectResponse(programs)];
+        res.json(formatResponse);
+    }catch(e){
+        responseCodeError(e, res);
+    }
+
+})
+
+
 
 
 module.exports = router;

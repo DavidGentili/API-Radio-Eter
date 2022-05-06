@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { getFormatUser } = require('./formatData');
+const { formatObjectResponse } = require('./formatData');
 const {privateKey} = require('../config');
 
 const isAuthenticated = (req, res, next) => {  
@@ -15,7 +15,7 @@ const isAuthenticated = (req, res, next) => {
 }
 
 const authenticateUser = (objectUser) => {
-    const user = getFormatUser(objectUser);
+    const user = formatObjectResponse(objectUser);
     return jwt.sign({user}, privateKey,{
         expiresIn: "24h"
     });
