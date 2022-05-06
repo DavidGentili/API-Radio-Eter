@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const Program = require('../models/Program');
+const upload = require('../helpers/storage');
+const { host } = require('../config');
 const { checkProgramData } = require('../helpers/checkData')
 const responseCodeError = require('../helpers/responseCodeError');
 const { isAuthenticated } = require('../helpers/auth');
@@ -9,6 +11,21 @@ const { getFormatParameters, formatObjectResponse } = require('../helpers/format
 router.use('/programs', (req , res, next) => {
     req.securityLevelRequired = ['admin', 'master'];
     next();
+})
+
+router.use('programs/uploadimage', (req, res, next) => {
+    const { programId } = req.body;
+    Program.findById(programId)
+    .then((currentProgram) => {
+        if(currentProgram.highlighted)
+            next();
+        else
+            throw {code: 400, response: { message: 'the program cannot have an image assigned' }}
+    })
+    .catch((e) => {
+        responseCodeError(e, res);
+    })
+
 })
 
 const createProgram = async (data) => {
@@ -21,9 +38,6 @@ const createProgram = async (data) => {
     return { message: 'the program was created successfully'}
 }
 
-const getPrograms = async (query) => {
-
-}
 
 router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     createProgram(req.body)
@@ -35,7 +49,7 @@ router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     })
 })
 
-router.get('/programs', async (req,res) => {
+router.get('/programs', isAuthenticated, correctSecurityLevel, async (req,res) => {
     try{
         const parameters = getFormatParameters(req.query, ['highlighted', 'id']);
         const programs = await Program.find(parameters).lean();
@@ -44,7 +58,13 @@ router.get('/programs', async (req,res) => {
     }catch(e){
         responseCodeError(e, res);
     }
+})
 
+
+
+router.post('/programs/uploadimage', isAuthenticated, correctSecurityLevel, upload.single('program'), (req, res) => {
+    
+    
 })
 
 
