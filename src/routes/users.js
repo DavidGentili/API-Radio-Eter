@@ -18,7 +18,7 @@ const signupUser = async (req) => {
     const {email, name, securityLevel} = req.body;
     const check = checkUserData({email,name,securityLevel}) 
     if(typeof(check) === 'string') // se constata que la informacion sea correcta
-        throw {code: 400, response: {message: `incorrect ${check}`}};
+        throw {code: 400, response: {message: `the ${check} information is wrong`}};
 
     const currentEmail = await User.findOne({email: email.toLowerCase()}) 
     if(currentEmail)// se constata que no este repetido el mail
