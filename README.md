@@ -63,7 +63,7 @@
 ###### Get Ad
     path: /ad
     method: post
-    headers: authorization, Content-Type : multipart/form-data
+    headers: authorization
     payload: adId, name (notRequired), altText (notRequired), link (notRequired), type (notRequired)
     query: type (optional);
     return: 200 - [ads] || 4-- errorMessage
@@ -78,6 +78,16 @@
 ###### Delete Ad
     path: /ad
     method: Delete
-    headers: authorization, Content-Type : multipart/form-data
+    headers: authorization
     payload: adId
     return: 200 - {checkMessage} || 4-- errorMessage
+
+#### Program
+
+###### Create Program
+    path: /program
+    method: post
+    headers: authorization
+    payload: name, startHour, finishHour, highlightled, days,  
+    return: 200 - {checkMessage} || 4-- errorMessage
+
