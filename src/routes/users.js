@@ -17,7 +17,7 @@ router.use('/users',(req, res, next) => {
 const signupUser = async (req) => {
     const {email, name, securityLevel} = req.body;
     const check = checkUserData({email,name,securityLevel}) 
-    if(check !== true) // se constata que la informacion sea correcta
+    if(typeof(check) === 'string') // se constata que la informacion sea correcta
         throw {code: 400, response: {message: `incorrect ${check}`}};
 
     const currentEmail = await User.findOne({email: email.toLowerCase()}) 
