@@ -38,7 +38,7 @@ router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
 router.get('/programs', async (req,res) => {
     try{
         const parameters = getFormatParameters(req.query, ['highlighted', 'id']);
-        const programs = await Program.find(parameters);
+        const programs = await Program.find(parameters).lean();
         const formatResponse = Array.isArray(programs) ? programs.map(program => formatObjectResponse(program)) : [formatObjectResponse(programs)];
         res.json(formatResponse);
     }catch(e){
