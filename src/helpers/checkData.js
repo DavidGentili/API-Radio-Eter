@@ -58,10 +58,27 @@ const checkUpdateProgramData = ({name, startHour, finishHour, highlighted, days,
     return true;
 }
 
+const checkTransmissionDate = (startDate, finishDate) => {
+    return (typeof(startDate) !== 'object'
+    || typeof(finishDate) !== 'object'
+    || startDate.toString() === 'Invalid Date'
+    || finishDate.toString() === 'Invalid Date'
+    || startDate > finishDate) ? false : true;
+}
+
+const checkNewSpecialTransmission = ({ name, startTransmission, finishTransmission, creatorName, creatorId }) => {
+    if(!name || !checkName(name)) return 'name';
+    if(!startTransmission || !finishTransmission || !checkTransmissionDate(startTransmission, finishTransmission)) return 'transmission date';
+    if(!creatorId || !checkCreatorId(creatorId)) return 'creator Id';
+    if(!creatorName || !checkCreatorName(creatorName)) return 'creator name'
+    return true;
+}
+
 
 
 module.exports = {
     checkUserData,
     checkNewProgramData,
     checkUpdateProgramData,
+    checkNewSpecialTransmission,
 }
