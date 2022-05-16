@@ -84,5 +84,20 @@ router.put('/specialTransmission', isAuthenticated, correctSecurityLevel, (req, 
 
 })
 
+router.delete('/specialtransmission', isAuthenticated, correctSecurityLevel, async (req, res) => {
+    const { transmissionId } = req.body;
+    try{
+        if(typeof(transmissionId) !== 'string' || transmissionId.length !== 24)
+            throw { code: 400, response: { message: 'wrong tranmission id' }};
+        const currentTransmission = await SpecialTransmission.findById(transmissionId);
+        if(!currentTransmission)
+            throw { code: 400, response: { message: 'wrong tranmission id' }};
+        await SpecialTransmission.findByIdAndDelete(transmissionId);
+        res.json({ message: 'the transmission was deleted successfully' });
+    } catch(e){
+        responseCodeError(e, res);
+    }
+})
+
 
 module.exports = router;
