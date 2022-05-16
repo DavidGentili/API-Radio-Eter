@@ -16,9 +16,9 @@ const getFullGrid = async () => {
     const queryPrograms = await Program.find().lean();
     const programs = (Array.isArray(queryPrograms)) ? queryPrograms.map(program => formatObjectResponse(program)) : [formatObjectResponse(queryPrograms)];
     grid.forEach((day, index, array) => {
-        const filterPrograms = programs.filter(program => program.days[index])
-        filterPrograms.sort(compareStartHour)
-        array[index] = filterPrograms;
+        const programsOfTheDay = programs.filter(program => program.days[index])
+        programsOfTheDay.sort(compareStartHour)
+        array[index] = programsOfTheDay;
     })
     return grid;
 }
