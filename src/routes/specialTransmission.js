@@ -27,6 +27,7 @@ const updateTransmission = async (data) => {
         throw { status: 400 , response: { message : `the ${check} information is wrong`}};
     const { name, startTransmission, finishTransmission, active } = data;
     await SpecialTransmission.findByIdAndUpdate(transmissionId, { name, startTransmission, finishTransmission, active });
+    await updateActiveTransmission();
     return { message: 'the transmission was updated successfully' };
 }
 
@@ -76,8 +77,6 @@ router.put('/specialTransmission', isAuthenticated, correctSecurityLevel, (req, 
         active,
         transmissionId,
     }
-    updateActiveTransmission()
-    .catch(e => console.log(e));
     updateTransmission(data)
     .then(response => res.json(response))
     .catch(e => responseCodeError(e, res))
@@ -93,6 +92,7 @@ router.delete('/specialtransmission', isAuthenticated, correctSecurityLevel, asy
         if(!currentTransmission)
             throw { code: 400, response: { message: 'wrong tranmission id' }};
         await SpecialTransmission.findByIdAndDelete(transmissionId);
+        await updateActiveTransmission();
         res.json({ message: 'the transmission was deleted successfully' });
     } catch(e){
         responseCodeError(e, res);

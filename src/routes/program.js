@@ -108,6 +108,9 @@ router.delete('/programs', isAuthenticated, correctSecurityLevel, async (req, re
     try{
         if(!programId || typeof(programId) !== 'string' || programId.length !== 24)
             throw { code: 400 , response: { message: 'wrong program id' } }
+        const currentProgram = await Program.findById(programId);
+        if(!currentProgram)
+            throw { code: 400 , response: { message: 'wrong program id' } };
         await Program.findByIdAndDelete(programId);
         res.json({ message: 'the program was removed successfully' });
     }
