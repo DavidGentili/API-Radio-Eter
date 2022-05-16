@@ -8,6 +8,8 @@ const ProgramSchema = new Schema({
     days : { type: [Boolean], require: true },
     highlighted : { type: Boolean, required: true },
     urlImage: { type: String },
+    creatorName: { type: String, required: true },
+    creatorId: { type: String, required: true }
 }, { versionKey: false });
 
 module.exports = mongoose.model('Program', ProgramSchema);
