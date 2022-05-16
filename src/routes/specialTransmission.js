@@ -76,6 +76,8 @@ router.put('/specialTransmission', isAuthenticated, correctSecurityLevel, (req, 
         active,
         transmissionId,
     }
+    updateActiveTransmission()
+    .catch(e => console.log(e));
     updateTransmission(data)
     .then(response => res.json(response))
     .catch(e => responseCodeError(e, res))
