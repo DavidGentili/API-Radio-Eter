@@ -7,6 +7,7 @@ const checkCreatorId = (creatorId) => typeof(creatorId) !== 'string' ? false : t
 const checkDays = (days) => (!Array.isArray(days) || !days.every(day => typeof(day) === 'boolean') || days.length !== 7) ? false : true;
 const checkSecurityLevel = (securityLevel) => (typeof(securityLevel) !== 'string' || !securityLevels.includes(securityLevel.toLowerCase())) ? false : true;
 const checkId = (id) => (typeof(id) !== 'string' || id.length !== 24) ? false : true;
+const checkBoolean = (bool) => (typeof(bool) !== 'boolean') ? false : true;
 const checkEmail = (email) => {
     const re = /^([\da-zA-Z_\.-]+)@([\da-zA-Z\.-]+)\.([a-zA-Z\.]{2,6})$/;
     return (typeof(email) !== 'string' || !re.exec(email)) ? false : true;
@@ -59,7 +60,9 @@ const checkUpdateProgramData = ({name, startHour, finishHour, highlighted, days,
 }
 
 const checkTransmissionDate = (startDate, finishDate) => {
-    return (typeof(startDate) !== 'object'
+    return (!startDate
+    || !finishDate
+    || typeof(startDate) !== 'object'
     || typeof(finishDate) !== 'object'
     || startDate.toString() === 'Invalid Date'
     || finishDate.toString() === 'Invalid Date'
@@ -68,9 +71,18 @@ const checkTransmissionDate = (startDate, finishDate) => {
 
 const checkNewSpecialTransmission = ({ name, startTransmission, finishTransmission, creatorName, creatorId }) => {
     if(!name || !checkName(name)) return 'name';
-    if(!startTransmission || !finishTransmission || !checkTransmissionDate(startTransmission, finishTransmission)) return 'transmission date';
+    if(!checkTransmissionDate(startTransmission, finishTransmission)) return 'transmission date';
     if(!creatorId || !checkCreatorId(creatorId)) return 'creator Id';
     if(!creatorName || !checkCreatorName(creatorName)) return 'creator name'
+    return true;
+}
+
+const checkUpdateSpecialTransmission = ({ name, startTransmission, finishTransmission, active, transmissionId }) => {
+    if(name && !checkName(name)) return 'name';
+    if((startTransmission || finishTransmission) && !checkTransmissionDate(startTransmission, finishTransmission)) return 'transmission date';
+    if((startTransmission  || !finishTransmission) && (!startTransmission || finishTransmission) && checkTransmissionDate(startTransmission,finishTransmission))
+    if(active && !checkBoolean(active)) return 'active'
+    if(!transmissionId || !checkId(transmissionId)) return 'transmission id';
     return true;
 }
 
@@ -81,4 +93,5 @@ module.exports = {
     checkNewProgramData,
     checkUpdateProgramData,
     checkNewSpecialTransmission,
+    checkUpdateSpecialTransmission,
 }
