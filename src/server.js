@@ -14,6 +14,8 @@ app.use(require('./routes/users'));
 app.use(require('./routes/publicity'));
 app.use(require('./routes/program'))
 app.use(require('./routes/specialTransmission'))
+app.use(require('./routes/programGrid'));
+
 
 app.set('port', port || 5500)
 
