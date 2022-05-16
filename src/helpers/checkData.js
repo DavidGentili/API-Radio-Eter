@@ -6,7 +6,7 @@ const checkCreatorName = (creatorName) => typeof(creatorName) !== 'string' ? fal
 const checkCreatorId = (creatorId) => typeof(creatorId) !== 'string' ? false : true; 
 const checkDays = (days) => (!Array.isArray(days) || !days.every(day => typeof(day) === 'boolean') || days.length !== 7) ? false : true;
 const checkSecurityLevel = (securityLevel) => (typeof(securityLevel) !== 'string' || !securityLevels.includes(securityLevel.toLowerCase())) ? false : true;
-const checkId = (id) => (typeof(id) !== 'string' || id.length !== 24)
+const checkId = (id) => (typeof(id) !== 'string' || id.length !== 24) ? false : true;
 const checkEmail = (email) => {
     const re = /^([\da-zA-Z_\.-]+)@([\da-zA-Z\.-]+)\.([a-zA-Z\.]{2,6})$/;
     return (typeof(email) !== 'string' || !re.exec(email)) ? false : true;

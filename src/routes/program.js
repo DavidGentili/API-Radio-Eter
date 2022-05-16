@@ -38,8 +38,8 @@ const createProgram = async (data) => {
     const check = checkNewProgramData(data);
     if(typeof(check) === 'string')
         throw { status: 400 , response: { message : `the ${check} information is wrong`}}
-    const { name, startHour, finishHour, highlighted, days } = data;
-    const newProgram = new Program({name, startHour, finishHour, highlighted, days});
+    const { name, startHour, finishHour, highlighted, days, creatorName, creatorId } = data;
+    const newProgram = new Program({name, startHour, finishHour, highlighted, days, creatorName, creatorId});
     await newProgram.save();
     return { message: 'the program was created successfully'}
 }
@@ -61,6 +61,7 @@ router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
         res.json(response);
     })
     .catch(e => {
+        console.log(e);
         responseCodeError(e,res);
     })
 })
