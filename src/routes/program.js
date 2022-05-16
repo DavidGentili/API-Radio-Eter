@@ -103,5 +103,18 @@ router.put('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     })
 })
 
+router.delete('/programs', isAuthenticated, correctSecurityLevel, async (req, res) =>{
+    const { programId } = req.body;
+    try{
+        if(!programId || typeof(programId) !== 'string' || programId.length !== 24)
+            throw { code: 400 , response: { message: 'wrong program id' } }
+        await Program.findByIdAndDelete(programId);
+        res.json({ message: 'the program was removed successfully' });
+    }
+    catch(e){
+        responseCodeError(e, res);
+    }
+})
+
 
 module.exports = router;
