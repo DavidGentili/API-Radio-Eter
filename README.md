@@ -91,3 +91,67 @@
     payload: name, startHour, finishHour, highlightled, days,  
     return: 200 - {checkMessage} || 4-- errorMessage
 
+###### Get Program
+    path: /program
+    method: get
+    headers: authorization 
+    return: 200 - {programs} || 4-- errorMessage
+
+###### update Program
+    path: /program
+    method: put
+    headers: authorization
+    payload: ProgramId, name, startHour, finishHour, highlightled, days,  
+    return: 200 - {checkMessage} || 4-- errorMessage
+
+###### Delete Program
+    path: /program
+    method: delete
+    headers: authorization
+    payload: ProgramId,  
+    return: 200 - {checkMessage} || 4-- errorMessage
+
+
+#### Special transmission
+
+###### Create transmission
+    path: /specialtransmission
+    method: post
+    headers: authorization
+    payload: name, startTransmission, finishTransmission,   
+    return: 200 - {checkMessage} || 4-- errorMessage
+
+###### Get transmission
+    path: /specialtransmission
+    method: get
+    headers: authorization
+    return: 200 - {specialTransmissions} || 4-- errorMessage
+
+###### Update transmission
+    path: /specialtransmission
+    method: put
+    headers: authorization
+    payload: TransmissionId, name, startTransmission, finishTransmission, active  
+    return: 200 - {checkMessage} || 4-- errorMessage
+
+
+###### Delete transmission
+    path: /specialtransmission
+    method: delete
+    headers: authorization
+    payload: TransmissionId, 
+    return: 200 - {checkMessage} || 4-- errorMessage
+
+#### Program Grid
+
+###### Get Program Grid
+    path: /programgrid
+    method: post
+    headers: authorization
+    query: day, 
+    return: 200 - [programGrid] || 4-- errorMessage
+
+###### Get Current Program
+    path: /currentprogram
+    method: post
+    return: 200 - {program} || 4-- errorMessage

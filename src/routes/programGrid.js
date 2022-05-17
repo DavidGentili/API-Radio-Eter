@@ -35,14 +35,6 @@ const getDayGrid = (day) => {
     }
 }
 
-router.get('/programgrid', (req, res) => {
-    const { day } = req.query;
-    const promise = (day) ? getDayGrid(day) : getFullGrid;
-    promise()
-    .then(response => res.json(response))
-    .catch(e => responseCodeError(e, res));
-})
-
 const getTranmission = async () => {
     let transmissions = await SpecialTransmission.find({ active : true }).lean();
     if(!transmissions)
@@ -72,6 +64,14 @@ const getProgram = async () => {
     return currentprogram;
     
 }
+
+router.get('/programgrid', isAuthenticated, correctSecurityLevel, (req, res) => {
+    const { day } = req.query;
+    const promise = (day) ? getDayGrid(day) : getFullGrid;
+    promise()
+    .then(response => res.json(response))
+    .catch(e => responseCodeError(e, res));
+})
 
 router.get('/currentprogram', (req, res) => {
     getTranmission()
