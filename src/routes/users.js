@@ -105,7 +105,6 @@ router.post('/users/login', (req,res) => {
         res.json(response)
     })
     .catch((e) => {
-        console.log(e);
         responseCodeError(e, res)
     })
 })
@@ -152,7 +151,7 @@ router.get('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
 
 router.delete('/users', isAuthenticated, correctSecurityLevel, (req,res) => {
     const { id } = req.body;
-    deleteUser(id, user)
+    deleteUser(id)
     .then((response) => {
         res.status = 200;
         res.json(response);

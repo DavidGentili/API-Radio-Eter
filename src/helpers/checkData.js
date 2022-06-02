@@ -1,4 +1,4 @@
-const securityLevels = require('../helpers/securityLvl');
+const { securityLevels } = require('../helpers/securityLvl');
 
 const checkName = (name) => (typeof(name) !== 'string' || name.length < 4) ?  false : true;
 const checkHighlighted = (highlighted) => typeof(highlighted) !== 'boolean' ? false : true;
@@ -17,7 +17,7 @@ const checkEmail = (email) => {
 //Se encargar de comprobar que la informacion para un signup sea correcta en ese caso retorna true
 //caso contrario retorna retornar un string con el nombre del atributo incorrecto para retornar el error
 const checkUserData = ({email, name, securityLevel}) => {
-    if(!securityLevel || checkSecurityLevel(securityLevel)) return 'security level';
+    if(!securityLevel || !checkSecurityLevel(securityLevel)) return 'security level';
     if(!email || !checkEmail(email)) return 'email'
     if(!name || !checkName) return 'name'
     return true;
