@@ -4,14 +4,21 @@ const User = require('../models/User');
 const { checkUserData } = require('../helpers/checkData');
 const generator = require('generate-password');
 const { notifyNewUser, notifyChangePassword } = require('../helpers/sendMail');
-const { getFormatUser, getFormatParameters } = require('../helpers/formatData');
-const securityLevels = require('../helpers/securityLvl');
+const { formatObjectResponse, getFormatParameters } = require('../helpers/formatData');
+const { securityLevels, correctSecurityLevel } = require('../helpers/securityLvl');
+const responseCodeError = require('../helpers/responseCodeError');
+
+router.use('/users',(req, res, next) => {
+    req.securityLevelRequired = ['master'];
+    next();
+})
+
 
 const signupUser = async (req) => {
     const {email, name, securityLevel} = req.body;
     const check = checkUserData({email,name,securityLevel}) 
-    if(check !== true) // se constata que la informacion sea correcta
-        throw {code: 400, response: {message: `incorrect ${check}`}};
+    if(typeof(check) === 'string') // se constata que la informacion sea correcta
+        throw {code: 400, response: {message: `the ${check} information is wrong`}};
 
     const currentEmail = await User.findOne({email: email.toLowerCase()}) 
     if(currentEmail)// se constata que no este repetido el mail
@@ -31,7 +38,7 @@ const loginUser = async (req) => {
         throw {code: 403 , response: {message: 'wrong user/password'}}
     const matchPassword = await currentUser.matchPassword(password);
     if(matchPassword)
-        return {token: authenticateUser(currentUser)};
+        return {token: authenticateUser(await User.findById(currentUser._id).lean())};
     else
         throw {code: 403, response: {message: 'wrong user/password'}};
     
@@ -58,9 +65,6 @@ const updateUser = async ({ idUser, id, state, securityLevel }) => {
         securityLevel = securityLevel.toLowerCase();
 
     const authorizatedUser = await User.findById(id);
-    if(!authorizatedUser || authorizatedUser.securityLevel !== 'master')
-        throw {code: 403, response: {message: 'the user not has the security level authorizated'}}
-
     const parameters = getFormatParameters({state, securityLevel}, ['state','securityLevel']);
     await User.findByIdAndUpdate(idUser, parameters);
     return { message: 'the user was update successfully'}
@@ -71,14 +75,12 @@ const getUsers = async (id, query) => {
     const queryParameters = {};
     if(query.id)
         queryParameters._id = query.id;
-    const users = await User.find(queryParameters);
-    const formatUser = users.map(user => getFormatUser(user));
+    const users = await User.find(queryParameters).lean();
+    const formatUser = users.map(user => formatObjectResponse(user));
     return {users: formatUser};
 }
 
-const deleteUser = async (id, user) => {
-    if(user.securityLevel.toLowerCase() !== 'master')
-        throw {code: 403, response: {message: 'the user not has the security level authorizated'}}
+const deleteUser = async (id) => {
     const currentUser = await User.findById(id);
     if(!currentUser)
         throw {code: 400, response: {message: 'wrong parameters'}};
@@ -86,23 +88,14 @@ const deleteUser = async (id, user) => {
     return {message: 'the user was deleted successfully'}
 }
 
-router.post('/users/signup', isAuthenticated, (req,res) => {
-    const {user} = req;
-    if(user.securityLevel.toLowerCase() !== 'master'){
-        res.statusCode = 403;
-        res.json({message: 'the user not has the security level authorizated'})
-    } else{
-        signupUser(req)
-        .then((response) => {
-            res.json(response)
-        })
-        .catch((e) => {
-            console.log(e)
-            const {code = 500, response = {message: 'Internal Server Error'}} = e;
-            res.statusCode = code;
-            res.json(response)
-        })
-    }
+router.post('/users/signup', isAuthenticated, correctSecurityLevel, (req,res) => {
+    signupUser(req)
+    .then((response) => {
+        res.json(response)
+    })
+    .catch((e) => {
+        responseCodeError(e, res)
+    })
     
 })
 
@@ -112,9 +105,7 @@ router.post('/users/login', (req,res) => {
         res.json(response)
     })
     .catch((e) => {
-        const {code = 500, response = {message: 'Internal Server Error'}} = e;
-        res.statusCode = code;
-        res.json(response)
+        responseCodeError(e, res)
     })
 })
 
@@ -127,13 +118,11 @@ router.put('/users/password', isAuthenticated, (req,res) => {
         res.json(response);
     })
     .catch((e) => {
-        const {code = 500, response = {message: 'Internal Server Error'}} = e;
-        res.statusCode = code;
-        res.json(response)
+        responseCodeError(e, res)
     })
 })
 
-router.put('/users', isAuthenticated, (req, res) => {
+router.put('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { idUser, securityLevel, state } = req.body;
     const { id } = req.user;
     updateUser({ idUser, id, securityLevel, state })
@@ -142,15 +131,12 @@ router.put('/users', isAuthenticated, (req, res) => {
         res.json(response);
     })
     .catch((e) => {
-        console.log(e);
-        const {code = 500, response = {message: 'Internal Server Error'}} = e;
-        res.statusCode = code;
-        res.json(response)
+        responseCodeError(e, res)
     })
 
 })
 
-router.get('/users', isAuthenticated, (req, res) => {
+router.get('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { id } = req.user;
     getUsers(id, req.query)
     .then((response) => {
@@ -158,24 +144,20 @@ router.get('/users', isAuthenticated, (req, res) => {
         res.json(response);
     })
     .catch((e) => {
-        const {code = 500, response = {message: 'Internal Server Error'}} = e;
-        res.statusCode = code;
-        res.json(response)
+        console.log(e);
+        responseCodeError(e, res)
     })
 })
 
-router.delete('/users', isAuthenticated, (req,res) => {
-    const { user } = req;
+router.delete('/users', isAuthenticated, correctSecurityLevel, (req,res) => {
     const { id } = req.body;
-    deleteUser(id, user)
+    deleteUser(id)
     .then((response) => {
         res.status = 200;
         res.json(response);
     })
     .catch((e) => {
-        const {code = 500, response = {message: 'Internal Server Error'}} = e;
-        res.statusCode = code;
-        res.json(response)
+        responseCodeError(e, res)
     })
 })
 
@@ -184,6 +166,8 @@ router.get('/users/auth',isAuthenticated, (req, res) => {
     if(user){
         res.status = 200;
         res.json(user);
+    } else {
+        responseCodeError(undefined,res)
     }
 })
 

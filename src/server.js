@@ -7,9 +7,15 @@ const cors = require('cors');
 //Middlewares
 app.use(cors());
 app.use(bodyParser.json());
+app.use('/public', express.static('./public'))
 
 //Routes
 app.use(require('./routes/users'));
+app.use(require('./routes/publicity'));
+app.use(require('./routes/program'))
+app.use(require('./routes/specialTransmission'))
+app.use(require('./routes/programGrid'));
+
 
 app.set('port', port || 5500)
 
