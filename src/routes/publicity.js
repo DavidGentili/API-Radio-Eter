@@ -15,7 +15,7 @@ router.use('/ad', (req , res, next) => {
 
 const updateAd = async (data) => {
     const { name, altText, link, type, adId } = data;
-    if(!adId && adId.lenght !== 24 )
+    if(!adId || adId.length !== 24 )
         throw {code: 400, response: { message: 'wrong parameters'}};
     const formatAttributes = getFormatParameters({name, altText, link, type }, [ 'name', 'altText', 'link', 'type' ]);
     await Publicity.findByIdAndUpdate(adId, formatAttributes);
@@ -23,7 +23,7 @@ const updateAd = async (data) => {
 }
 
 const deleteAd = async (adId) => {
-    if(!adId && adId.lenght !== 24)
+    if(!adId || adId.length !== 24)
         throw {code: 400, response: { message: 'wrong parameters'}};
     const ad = await Publicity.findById(adId).lean();
     if(!ad)
@@ -76,7 +76,6 @@ router.delete('/ad', isAuthenticated, correctSecurityLevel, (req, res) => {
         res.json(response)
     })
     .catch(e => {
-        conse
         responseCodeError(e, res);
     })
 })
