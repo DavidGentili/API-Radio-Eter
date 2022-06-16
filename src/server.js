@@ -3,16 +3,21 @@ const app = express();
 const bodyParser = require('body-parser');
 const {port} = require('./config');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
+const checkIfExistFile = require('./middlewares/public.middlewares');
 
 //Middlewares
 app.use(cors());
 app.use(bodyParser.json());
+app.use(fileUpload({
+    limits : { fileSize: 10 * 1024 * 1024}
+}))
+app.use('/public', checkIfExistFile);
 app.use('/public', express.static('./public'))
-// app.use(express.static(`${__dirname}/public`));
 
 //Routes
-app.use(require('./routes/users'));
-app.use(require('./routes/publicity'));
+app.use(require('./routes/users.route'));
+app.use(require('./routes/publicity.route'));
 app.use(require('./routes/program'))
 app.use(require('./routes/specialTransmission'))
 app.use(require('./routes/programGrid'));

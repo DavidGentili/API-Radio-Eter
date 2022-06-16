@@ -8,6 +8,7 @@ const checkDays = (days) => (!Array.isArray(days) || !days.every(day => typeof(d
 const checkSecurityLevel = (securityLevel) => (typeof(securityLevel) !== 'string' || !securityLevels.includes(securityLevel.toLowerCase())) ? false : true;
 const checkId = (id) => (typeof(id) !== 'string' || id.length !== 24) ? false : true;
 const checkBoolean = (bool) => (typeof(bool) !== 'boolean') ? false : true;
+const checkTypePublicity = (type) => (typeof(type) !== 'string' || type.toLowerCase() !== 'oficial' || type.toLowerCase() !== 'standard') ? false : true;
 const checkEmail = (email) => {
     const re = /^([\da-zA-Z_\.-]+)@([\da-zA-Z\.-]+)\.([a-zA-Z\.]{2,6})$/;
     return (typeof(email) !== 'string' || !re.exec(email)) ? false : true;
@@ -17,9 +18,9 @@ const checkEmail = (email) => {
 //Se encargar de comprobar que la informacion para un signup sea correcta en ese caso retorna true
 //caso contrario retorna retornar un string con el nombre del atributo incorrecto para retornar el error
 const checkUserData = ({email, name, securityLevel}) => {
-    if(!securityLevel || !checkSecurityLevel(securityLevel)) return 'security level';
-    if(!email || !checkEmail(email)) return 'email'
-    if(!name || !checkName) return 'name'
+    if(!securityLevel || !checkSecurityLevel(securityLevel)) return 'Nivel de seguridad';
+    if(!email || !checkEmail(email)) return 'Mail'
+    if(!name || !checkName) return 'Nombre'
     return true;
 }
 
@@ -39,22 +40,22 @@ const checkTime = (time) => {
 //en el schema de la base de datos, en caso de que esten correctos los atributos retorna true, 
 //caso constrario retorna el nombre del atributo incorrecto
 const checkNewProgramData = ({name, startHour,finishHour, highlighted, days, creatorName, creatorId}) => {
-    if(!name || !checkName(name)) return 'name';
-    if(!startHour || !checkTime(startHour)) return 'start hour';
-    if(!finishHour || !checkTime(finishHour)) return 'finish hour';
-    if(!highlighted || !checkHighlighted(highlighted)) return 'highlighted';
-    if(!days || !checkDays(days)) return 'days'
-    if(!creatorName || !checkCreatorName(creatorName)) return 'creator name'
-    if(!creatorId || !checkCreatorId(creatorId)) return 'creator id'
+    if(!name || !checkName(name)) return 'Nombre';
+    if(!startHour || !checkTime(startHour)) return 'Hora de inicio';
+    if(!finishHour || !checkTime(finishHour)) return 'Hora de finalizacion';
+    if(!highlighted || !checkHighlighted(highlighted)) return 'Destacado';
+    if(!days || !checkDays(days)) return 'Dias'
+    if(!creatorName || !checkCreatorName(creatorName)) return 'Nombre del creador'
+    if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador'
     return true; 
 }
 
 const checkUpdateProgramData = ({name, startHour, finishHour, highlighted, days, programId}) => {
-    if(name && !checkName(name)) return 'name';
-    if(startHour && !checkTime(startHour)) return 'start hour';
-    if(finishHour && !checkTime(finishHour)) return 'finish hour';
-    if(highlighted && !checkHighlighted(highlighted)) return 'highlighted';
-    if(days && !checkDays(days)) return 'days'
+    if(name && !checkName(name)) return 'Nombre';
+    if(startHour && !checkTime(startHour)) return 'Hora de inicio';
+    if(finishHour && !checkTime(finishHour)) return 'Hora de finalizacion';
+    if(highlighted && !checkHighlighted(highlighted)) return 'Destacado';
+    if(days && !checkDays(days)) return 'Dias'
     if(!programId || !checkId(programId)) return 'id';
     return true;
 }
@@ -70,22 +71,27 @@ const checkTransmissionDate = (startDate, finishDate) => {
 }
 
 const checkNewSpecialTransmission = ({ name, startTransmission, finishTransmission, creatorName, creatorId }) => {
-    if(!name || !checkName(name)) return 'name';
-    if(!checkTransmissionDate(startTransmission, finishTransmission)) return 'transmission date';
-    if(!creatorId || !checkCreatorId(creatorId)) return 'creator Id';
-    if(!creatorName || !checkCreatorName(creatorName)) return 'creator name'
+    if(!name || !checkName(name)) return 'Nombre';
+    if(!checkTransmissionDate(startTransmission, finishTransmission)) return 'fecha de transmision';
+    if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador';
+    if(!creatorName || !checkCreatorName(creatorName)) return 'Nombre del creador'
     return true;
 }
 
 const checkUpdateSpecialTransmission = ({ name, startTransmission, finishTransmission, active, transmissionId }) => {
-    if(name && !checkName(name)) return 'name';
-    if((startTransmission || finishTransmission) && !checkTransmissionDate(startTransmission, finishTransmission)) return 'transmission date';
+    if(name && !checkName(name)) return 'Nombre';
+    if((startTransmission || finishTransmission) && !checkTransmissionDate(startTransmission, finishTransmission)) return 'fecha de transmision';
     if((startTransmission  || !finishTransmission) && (!startTransmission || finishTransmission) && checkTransmissionDate(startTransmission,finishTransmission))
-    if(active && !checkBoolean(active)) return 'active'
-    if(!transmissionId || !checkId(transmissionId)) return 'transmission id';
+    if(active && !checkBoolean(active)) return 'activo'
+    if(!transmissionId || !checkId(transmissionId)) return 'Id de transmision';
     return true;
 }
 
+const checkNewPublicityData = ({ name, type }) => {
+    if(!name || !checkName(name)) return 'Nombre';
+    if(!type || !checkTypePublicity(type)) return 'Tipo';
+    return true;
+}
 
 
 module.exports = {
@@ -94,4 +100,5 @@ module.exports = {
     checkUpdateProgramData,
     checkNewSpecialTransmission,
     checkUpdateSpecialTransmission,
+    checkNewPublicityData,
 }
