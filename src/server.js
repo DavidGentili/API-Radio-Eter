@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const {port} = require('./config');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-const checkIfExistFile = require('./middlewares/public.middlewares');
+const { checkIfExistFile } = require('./middlewares/public.middlewares');
 
 //Middlewares
 app.use(cors());
@@ -18,9 +18,9 @@ app.use('/public', express.static('./public'))
 //Routes
 app.use(require('./routes/users.route'));
 app.use(require('./routes/publicity.route'));
-app.use(require('./routes/program'))
-app.use(require('./routes/specialTransmission'))
-app.use(require('./routes/programGrid'));
+// app.use(require('./routes/program'))
+// app.use(require('./routes/specialTransmission'))
+// app.use(require('./routes/programGrid'));
 
 
 app.set('port', port || 9000)

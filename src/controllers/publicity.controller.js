@@ -1,15 +1,22 @@
 const Publicity = require('../models/Publicity');
 const { formatObjectResponse, getFormatParameters } = require('../helpers/formatData');
+const { createFile } = require ('./storageFile.controller');
 const { checkNewPublicityData } = require('../helpers/checkData');
 const { host } = require('../config');
 const { getNewFileName } = require('../helpers/storage');
 
 
 const createAd = async ( {name, altText, link, type, creatorName, creatorId, imageFile} ) => {
-    const check = checkNewPublicity(name, type);
+    const check = checkNewPublicityData(name, type);
+    if(check !== true)
+        throw {code: 400, response: {message: `Se ha ingresado un ${check} incorrecto`}};
     const fileName = getNewFileName(imageFile, 'ad');
-    
-
+    const urlImage = `${host}/public/${fileName}`;
+    const { data } = imageFile;
+    await createFile(fileName, data);
+    const newAd = new Publicity({ name, altText, creatorName, creatorId, link, type, urlImage })
+    await newAd.save();
+    return { message : 'La publicidad ha sido creada exitosamente'}
 }
 
 const updateAd = async (data) => {
@@ -33,8 +40,10 @@ const deleteAd = async (adId) => {
     return { message: 'the ad was removed sucessfull'}
 }
 
-const getAds = async () => {
-
+const getAds = async (type) => {
+    const ads = await (type ? Publicity.find({type}).lean() : Publicity.find().lean());
+    const formatResponse = Array.isArray(ads) ? ads.map(ad => formatObjectResponse(ad)) : [formatObjectResponse(ads)];
+    return formatResponse;
 }
 
 module.exports = { createAd, updateAd, deleteAd, getAds }

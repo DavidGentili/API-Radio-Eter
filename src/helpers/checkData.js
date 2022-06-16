@@ -94,6 +94,7 @@ const checkNewPublicityData = ({ name, type }) => {
 }
 
 
+
 module.exports = {
     checkUserData,
     checkNewProgramData,

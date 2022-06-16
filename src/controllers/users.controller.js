@@ -4,7 +4,6 @@ const { formatObjectResponse, getFormatParameters } = require('../helpers/format
 const { securityLevels } = require('../helpers/securityLvl')
 const { checkUserData } = require('../helpers/checkData');
 const { notifyNewUser, notifyChangePassword } = require('../helpers/sendMail');
-const { formatObjectResponse, getFormatParameters } = require('../helpers/formatData');
 const generator = require('generate-password');
 
 

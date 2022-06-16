@@ -1,5 +1,6 @@
 const StorageFile = require('../models/StorageFile');
 const { formatObjectResponse } = require('../helpers/formatData');
+const { createTmpImageFile } = require('../helpers/storage');
 
 
 const getFiles = async (name) => {
@@ -13,11 +14,14 @@ const getFileByName = async ( name ) => {
 }
 
 const createFile = async (name, data) => {
+    if(!name || name.length < 3 || !data)
+        throw { code: 500, response: { message : 'Error al crear el archivo'}};
     const currentFile = await getFileByName(name);
     if(createFile) 
         throw { code: 500, response: { message : 'Error al crear el archivo'}};
     const newFile = new StorageFile({ name, data });
     await newFile.save();
+    createTmpImageFile(name, data);
     return { message: 'Archivo creado con exito' };
 }
 

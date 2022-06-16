@@ -10,6 +10,5 @@ const authenticateUser = (objectUser) => {
 } 
 
 module.exports = {
-    isAuthenticated,
     authenticateUser,
 }

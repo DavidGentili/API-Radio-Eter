@@ -24,15 +24,16 @@ router.post('/ad', isAuthenticated, correctSecurityLevel, (req, res) => {
     })
 })
 
-router.get('/ad', async (req, res) => {
-    try{
-        const { type } = req.query;
-        const ads = await (type ? Publicity.find({type}).lean() : Publicity.find().lean());
-        const formatResponse = Array.isArray(ads) ? ads.map(ad => formatObjectResponse(ad)) : [formatObjectResponse(ads)];
-        res.json(formatResponse);
-    } catch(e){
+router.get('/ad', (req, res) => {
+    const { type } = req.query;
+    getAds(type)
+    .then(response => {
+        res.status = 200;
+        res.json(response);
+    })
+    .catch(e => {
         responseCodeError(e, res)
-    } 
+    })
 })
 
 router.put('/ad', isAuthenticated, correctSecurityLevel, (req, res) => {
