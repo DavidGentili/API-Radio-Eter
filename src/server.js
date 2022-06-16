@@ -25,11 +25,6 @@ app.get('/', (req,res) => {
     res.json({message: 'welcome to the Radio Eter MDP API'})
 })
 
-app.get('/public', (req,res) => {
-    console.log(__dirname);
-    res.json({message : 'Welcome to public'});
-})
-
 app.listen(app.get('port'), () => {
     console.log('Hello, i´m a server that listen in port ' + app.get('port'))
 })
