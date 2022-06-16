@@ -17,9 +17,10 @@ app.use(require('./routes/specialTransmission'))
 app.use(require('./routes/programGrid'));
 
 
-app.set('port', port || 5500)
+app.set('port', port || 9000)
 
 app.get('/', (req,res) => {
+    console.log(__dirname);
     res.json({message: 'welcome to the Radio Eter MDP API'})
 })
 
