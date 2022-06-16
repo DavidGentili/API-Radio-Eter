@@ -8,6 +8,7 @@ const cors = require('cors');
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/public', express.static('./public'))
+// app.use(express.static(`${__dirname}/public`));
 
 //Routes
 app.use(require('./routes/users'));
