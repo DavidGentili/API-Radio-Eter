@@ -12,7 +12,7 @@ const saveProgramFile = async (file) => {
     return `${host}/public/${fileName}`;
 }
 
-const ifhasUrlImageDeleteIt = (programId) => {
+const ifHasUrlImageDeleteIt = async (programId) => {
     const currentProgram = await Program.findById(programId);
     if(currentProgram.urlImage)
         await deleteFileByName(urlImage.split('/').pop());
@@ -47,7 +47,7 @@ const updateProgram = async (data) => {
         throw { status: 400 , response: { message : `the ${check} information is wrong`}};
     const { name, startHour, finishHour, highlighted, days } = data;
     if( highlighted && data.imageFile){
-        ifhasUrlImageDeleteIt(programId);
+        ifHasUrlImageDeleteIt(programId);
         urlImage = saveProgramFile(imageFile);
     }
     const programData = getFormatParameters({ name, startHour, finishHour, highlighted, days, urlImage }, ['name', 'startHour', 'finishHour', 'highlighted', 'days', 'urlImage']);
