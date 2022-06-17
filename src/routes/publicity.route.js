@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { isAuthenticated, correctSecurityLevel } = require('../middlewares/users.middleware');
+const { isAuthenticated, correctSecurityLevel } = require('../middlewares/users.middlewares');
 const responseCodeError = require('../helpers/responseCodeError');
 const { createAd, updateAd, deleteAd, getAds } = require('../controllers/publicity.controller');
 

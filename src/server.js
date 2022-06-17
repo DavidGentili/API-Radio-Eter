@@ -18,7 +18,7 @@ app.use('/public', express.static('./public'))
 //Routes
 app.use(require('./routes/users.route'));
 app.use(require('./routes/publicity.route'));
-// app.use(require('./routes/program'));
+app.use(require('./routes/program.route'));
 // app.use(require('./routes/specialTransmission'));
 // app.use(require('./routes/programGrid'));
 

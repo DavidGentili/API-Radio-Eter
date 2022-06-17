@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { isAuthenticated, correctSecurityLevel } = require('../middlewares/users.middleware');
+const { isAuthenticated, correctSecurityLevel } = require('../middlewares/users.middlewares');
 const responseCodeError = require('../helpers/responseCodeError');
 const { signupUser, loginUser, changePassword, updateUser, getUsers, deleteUser } = require('../controllers/users.controller');
 
@@ -13,6 +13,7 @@ router.post('/users/signup', isAuthenticated, correctSecurityLevel, (req,res) =>
     const { name, email, securityLevel } = req.body
     signupUser({ name, email, securityLevel })
     .then((response) => {
+        res.status = 200;
         res.json(response)
     })
     .catch((e) => {
@@ -25,6 +26,7 @@ router.post('/users/login', (req,res) => {
     const {email, password} = req.body;
     loginUser({ email, password })
     .then((response) => {
+        res.status = 200;
         res.json(response)
     })
     .catch((e) => {
