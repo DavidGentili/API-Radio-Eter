@@ -1,13 +1,13 @@
 const Publicity = require('../models/Publicity');
 const { formatObjectResponse, getFormatParameters } = require('../helpers/formatData');
-const { createFile } = require ('./storageFile.controller');
+const { createFile, deleteFileByName } = require ('./storageFile.controller');
 const { checkNewPublicityData } = require('../helpers/checkData');
 const { host } = require('../config');
-const { getNewFileName, deleteFileByName } = require('../helpers/storage');
+const { getNewFileName } = require('../helpers/storage');
 
 //Crea un nuevo anuncio, asignando el nombre al archivo, y almacenandolo.
 const createAd = async ( {name, altText, link, type, creatorName, creatorId, imageFile} ) => {
-    const check = checkNewPublicityData(name, type);
+    const check = checkNewPublicityData({ name, type });
     if(check !== true)
         throw {code: 400, response: {message: `Se ha ingresado un ${check} incorrecto`}};
     const fileName = getNewFileName(imageFile, 'ad');

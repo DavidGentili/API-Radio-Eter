@@ -10,14 +10,14 @@ const getFiles = async (name) => {
 
 const getFileByName = async ( name ) => {
     const file = await StorageFile.findOne({ name }).lean();
-    return formatObjectResponse(file);
+    return file ? formatObjectResponse(file) : undefined;
 }
 
 const createFile = async (name, data) => {
     if(!name || name.length < 3 || !data)
         throw { code: 500, response: { message : 'Error al crear el archivo'}};
     const currentFile = await getFileByName(name);
-    if(createFile) 
+    if(currentFile) 
         throw { code: 500, response: { message : 'Error al crear el archivo'}};
     const newFile = new StorageFile({ name, data });
     await newFile.save();
