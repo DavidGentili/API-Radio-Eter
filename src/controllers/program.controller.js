@@ -28,7 +28,7 @@ const getPrograms = async (highlighted, id) => {
 const createProgram = async (data) => {
     const check = checkNewProgramData(data);
     if(typeof(check) === 'string')
-        throw { status: 400 , response: { message : `the ${check} information is wrong`}}
+        throw { status: 400 , response: { message : `Se ha ingresado un ${check} incorrecto`}}
     const { name, startHour, finishHour, highlighted, days, creatorName, creatorId, imageFile } = data;
     const programData = {name, startHour, finishHour, highlighted, days, creatorName, creatorId};
     if( highlighted && imageFile )
@@ -44,7 +44,7 @@ const updateProgram = async (data) => {
     const check  = checkUpdateProgramData(data);
     let urlImage = null;
     if(typeof(check) === 'string')
-        throw { status: 400 , response: { message : `the ${check} information is wrong`}};
+        throw { status: 400 , response: { message : `Se ha ingresado un ${check} incorrecto`}};
     const { name, startHour, finishHour, highlighted, days } = data;
     if( highlighted && data.imageFile){
         ifHasUrlImageDeleteIt(programId);

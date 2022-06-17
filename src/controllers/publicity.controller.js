@@ -24,23 +24,23 @@ const createAd = async ( {name, altText, link, type, creatorName, creatorId, ima
 const updateAd = async (data) => {
     const { name, altText, link, type, adId } = data;
     if(!adId || adId.length !== 24 )
-        throw {code: 400, response: { message: 'wrong parameters'}};
+        throw {code: 400, response: { message: 'Parametros incorrectos'}};
     const formatAttributes = getFormatParameters({name, altText, link, type }, [ 'name', 'altText', 'link', 'type' ]);
     await Publicity.findByIdAndUpdate(adId, formatAttributes);
-    return { message: 'ad updated successfully' }
+    return { message: 'El aviso fue actualizado exitosamente' }
 }
 
 //Se encarga de eliminar el anuncio 
 const deleteAd = async (adId) => {
     if(!adId || adId.length !== 24)
-        throw {code: 400, response: { message: 'wrong parameters'}};
+        throw {code: 400, response: { message: 'Parametros incorrectos'}};
     const ad = await Publicity.findById(adId).lean();
     if(!ad)
-        throw {code: 400, response: { message: 'wrong parameters'}};
+        throw {code: 400, response: { message: 'Parametros incorrectos'}};
     const nameFile = ad.urlImage.split('/').pop();
     await deleteFileByName(nameFile);
     await Publicity.findByIdAndDelete(adId);
-    return { message: 'the ad was removed sucessfull'}
+    return { message: 'El aviso fue removido con exito'}
 }
 
 const getAds = async (type) => {
