@@ -10,6 +10,8 @@ const getFormatParameters = (object, keys) => {
 }
 
 const formatObjectResponse = (object) => {
+    if(!object)
+        return undefined;
     const keys = Object.keys(object);
     const exceptions = ['_id', 'password', '__v'];
     const newObject = {};
