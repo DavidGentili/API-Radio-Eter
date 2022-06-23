@@ -27,6 +27,12 @@ const getPrograms = async (highlighted, id) => {
     return formatResponse;
 }
 
+const getProgramsByDay = async (day) => {
+    const filter = {};
+    filter[`days.${day}`] = true; 
+    return await Program.find(filter).lean();
+}
+
 /*Crea un nuevo programa en la BD, se requiere un objeto que contenga (tipos especificado en el modelo de la BD):
     name,
     startHour,
@@ -87,4 +93,4 @@ const deleteProgram = async (programId) => {
     res.json({ message: 'El programa ha sido eliminado con exito' });
 }
 
-module.exports = { getPrograms, createProgram, updateProgram, deleteProgram }
+module.exports = { getPrograms, createProgram, updateProgram, deleteProgram, getProgramsByDay }
