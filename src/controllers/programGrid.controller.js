@@ -1,16 +1,8 @@
-const router = require('express').Router();
-const { isAuthenticated } = require('../helpers/auth');
 const { formatObjectResponse } = require('../helpers/formatData');
-const responseCodeError = require('../helpers/responseCodeError');
-const { correctSecurityLevel } = require('../helpers/securityLvl');
 const { compareStartHour } = require('../helpers/compare');
 const Program = require('../models/Program');
 const SpecialTransmission = require('../models/SpecialTransmission');
 
-router.use('/programGrid', (req , res, next) => {
-    req.securityLevelRequired = ['admin', 'master'];
-    next();
-})
 
 const getFullGrid = async () => {
     const grid = new Array(7).fill(new Array);
@@ -62,29 +54,6 @@ const getProgram = async () => {
     const programs = await getDayGrid(today-1)();
     const currentprogram = programs.find(program => findCurrentProgram(program));
     return currentprogram;
-    
 }
 
-router.get('/programgrid', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const { day } = req.query;
-    const promise = (day) ? getDayGrid(day) : getFullGrid;
-    promise()
-    .then(response => res.json(response))
-    .catch(e => responseCodeError(e, res));
-})
-
-router.get('/currentprogram', (req, res) => {
-    getTranmission()
-    .then((transmission) => {
-        if(transmission)
-            res.json(transmission);
-        else{
-            getProgram()
-            .then(program => res.json(program ? program : {name: 'Radio Eter MDP' }) )
-        }
-    })
-    .catch(e => responseCodeError(e, res));
-})
-
-
-module.exports = router;
+module.exports = { getDayGrid, getFullGrid, getTranmission}

@@ -30,7 +30,7 @@ const updateAd = async (data) => {
     return { message: 'El aviso fue actualizado exitosamente' }
 }
 
-//Se encarga de eliminar el anuncio 
+//Se encarga de eliminar el anuncio especificado con el Id
 const deleteAd = async (adId) => {
     if(!adId || adId.length !== 24)
         throw {code: 400, response: { message: 'Parametros incorrectos'}};
@@ -43,6 +43,7 @@ const deleteAd = async (adId) => {
     return { message: 'El aviso fue removido con exito'}
 }
 
+//Se encarga de obtener los anuncios de la BD, se puede especificar tipo.
 const getAds = async (type) => {
     const ads = await (type ? Publicity.find({type}).lean() : Publicity.find().lean());
     const formatResponse = Array.isArray(ads) ? ads.map(ad => formatObjectResponse(ad)) : [formatObjectResponse(ads)];
