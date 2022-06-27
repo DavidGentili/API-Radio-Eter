@@ -16,7 +16,6 @@ router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     const imageFile = ( req.files && req.files.imageFile) ? imageFile : undefined;
     const highlighted = (req.body.highlighted && req.body.highlighted.toLowerCase() === 'true') ? true : false; 
     const days = req.body.days.split(',').map(day => day==='true' ? true : false);
-    console.log(days);
     createProgram({ ...req.body, creatorName, creatorId, imageFile, highlighted, days })
     .then(response => {
         res.status = 200;
