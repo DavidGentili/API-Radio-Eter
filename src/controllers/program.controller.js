@@ -44,7 +44,6 @@ const getProgramsByDay = async (day) => {
     ImageFile ? (opcional)
 */
 const createProgram = async (data) => {
-    console.log(data, typeof(data.days));
     const check = checkNewProgramData(data);
     if(typeof(check) === 'string')
         throw { status: 400 , response: { message : `Se ha ingresado un ${check} incorrecto`}}
