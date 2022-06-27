@@ -13,14 +13,16 @@ router.use('/programs', (req , res, next) => {
 router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     const creatorId = req.user.id;
     const creatorName = req.user.name;
-    const { imageFile } = req.files
-    createProgram({...req.body, creatorName, creatorId, imageFile})
+    const imageFile = ( req.files && req.files.imageFile) ? imageFile : undefined;
+    const highlighted = (req.body.highlighted && req.body.highlighted.toLowerCase() === 'true') ? true : false; 
+    const days = req.body.days.split(',').map(day => day==='true' ? true : false);
+    console.log(days);
+    createProgram({ ...req.body, creatorName, creatorId, imageFile, highlighted, days })
     .then(response => {
         res.status = 200;
         res.json(response);
     })
     .catch(e => {
-        console.log(e);
         responseCodeError(e,res);
     })
 })

@@ -45,7 +45,7 @@ const checkNewProgramData = ({name, startHour,finishHour, highlighted, days, cre
     if(!name || !checkName(name)) return 'Nombre';
     if(!startHour || !checkTime(startHour)) return 'Hora de inicio';
     if(!finishHour || !checkTime(finishHour)) return 'Hora de finalizacion';
-    if(!highlighted || !checkHighlighted(highlighted)) return 'Destacado';
+    if(highlighted === undefined || !checkHighlighted(highlighted)) return 'Destacado';
     if(!days || !checkDays(days)) return 'Dias'
     if(!creatorName || !checkCreatorName(creatorName)) return 'Nombre del creador'
     if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador'
@@ -56,7 +56,7 @@ const checkUpdateProgramData = ({name, startHour, finishHour, highlighted, days,
     if(name && !checkName(name)) return 'Nombre';
     if(startHour && !checkTime(startHour)) return 'Hora de inicio';
     if(finishHour && !checkTime(finishHour)) return 'Hora de finalizacion';
-    if(highlighted && !checkHighlighted(highlighted)) return 'Destacado';
+    if(highlighted !== undefined && !checkHighlighted(highlighted)) return 'Destacado';
     if(days && !checkDays(days)) return 'Dias'
     if(!programId || !checkId(programId)) return 'id';
     return true;

@@ -57,7 +57,7 @@
     path: /ad
     method: post
     headers: authorization, Content-Type : multipart/form-data
-    payload: name, altText (notRequired), link (notRequired), type 
+    payload: name, altText (notRequired), link (notRequired), type, imageFile, 
     return: 200 - {checkMessage} || 4-- errorMessage
 
 ###### Get Ad
