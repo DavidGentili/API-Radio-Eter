@@ -90,7 +90,7 @@ const deleteProgram = async (programId) => {
     await Program.findByIdAndDelete(programId);
     if(currentProgram.highlighted && currentProgram.urlImage)
         await deleteFileByName(currentProgram.urlImage.split('/').pop());
-    res.json({ message: 'El programa ha sido eliminado con exito' });
+    return { message: 'El programa ha sido eliminado con exito' };
 }
 
 module.exports = { getPrograms, createProgram, updateProgram, deleteProgram, getProgramsByDay }

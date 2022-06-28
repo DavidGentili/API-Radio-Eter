@@ -13,7 +13,7 @@ router.use('/programs', (req , res, next) => {
 router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     const creatorId = req.user.id;
     const creatorName = req.user.name;
-    const imageFile = ( req.files && req.files.imageFile) ? imageFile : undefined;
+    const imageFile = ( req.files && req.files.imageFile) ? req.files.imageFile : undefined;
     const highlighted = (req.body.highlighted && req.body.highlighted.toLowerCase() === 'true') ? true : false; 
     const days = req.body.days.split(',').map(day => day==='true' ? true : false);
     createProgram({ ...req.body, creatorName, creatorId, imageFile, highlighted, days })
