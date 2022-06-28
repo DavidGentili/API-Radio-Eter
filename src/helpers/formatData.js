@@ -2,7 +2,7 @@ const getFormatParameters = (object, keys) => {
     const aux = {};
     if(Array.isArray(keys)){
         keys.forEach(key => {
-            if(object[key])
+            if(typeof(object[key]) !== 'undefined' && typeof(object[key] !== 'null'))
                 aux[key] = object[key];
         })
     }
