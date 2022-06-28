@@ -16,7 +16,7 @@ const saveProgramFile = async (file) => {
 const ifHasUrlImageDeleteIt = async (programId) => {
     const currentProgram = await Program.findById(programId);
     if(currentProgram.urlImage)
-        await deleteFileByName(urlImage.split('/').pop());
+        await deleteFileByName(currentProgram.urlImage.split('/').pop());
 }
 
 //Retorna los programas almacenados en la BD, se puede especificar el Id o si es destacado
@@ -66,14 +66,17 @@ const createProgram = async (data) => {
  */
 const updateProgram = async (data) => {
     const { programId } = data;
+    let urlImage = undefined;
     const check  = checkUpdateProgramData(data);
-    let urlImage = null;
     if(typeof(check) === 'string')
         throw { status: 400 , response: { message : `Se ha ingresado un ${check} incorrecto`}};
+    const currentProgram = await Program.findById(programId);
+    if(!currentProgram)
+        throw { status: 400, resposne: { message : 'Se ha ingresado un id incorrecto' }}
     const { name, startHour, finishHour, highlighted, days } = data;
-    if( highlighted && data.imageFile){
+    if( (highlighted || (highlighted === undefined && currentProgram.highlighted)) && data.imageFile){
         ifHasUrlImageDeleteIt(programId);
-        urlImage = saveProgramFile(imageFile);
+        urlImage = await saveProgramFile(data.imageFile);
     }
     const programData = getFormatParameters({ name, startHour, finishHour, highlighted, days, urlImage }, ['name', 'startHour', 'finishHour', 'highlighted', 'days', 'urlImage']);
     await Program.findByIdAndUpdate(programId, programData);
