@@ -11,7 +11,8 @@ const getFiles = async () => {
 //Retorna el archivo almacenado en la BD que tiene dicho nombre
 const getFileByName = async ( name ) => {
     const file = await StorageFile.findOne({ name }).lean();
-    return file ? formatObjectResponse(file) : undefined;
+    // return file ? formatObjectResponse(file) : undefined;
+    return file;
 }
 
 //Se encarga de almacenar un archivo en la BD

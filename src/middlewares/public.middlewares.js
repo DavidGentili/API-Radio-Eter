@@ -5,10 +5,10 @@ const checkIfExistFile = async (req, res, next) => {
     try{
         const fileName = req.path.split('/').pop();
         if(!existFile(fileName)){
-            const tempImage = getFileByName(fileName);
+            const tempImage = await getFileByName(fileName);
             if(tempImage){
                 const { name, data } = tempImage;
-                createTmpImageFile(name, data);
+                createTmpImageFile(name, data.buffer);
             }
         }
     } catch(e){
