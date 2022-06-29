@@ -29,7 +29,7 @@ router.post('/specialtransmission', isAuthenticated, correctSecurityLevel, (req,
 router.get('/specialtransmission', isAuthenticated, correctSecurityLevel, async (req, res) => {
     const params = {
         name : req.query.name,
-        active : (req.query.active === 'true') ? true : false
+        active : (req.query.active) ? (req.query.active === 'true' ? true : false) : undefined
     }
     getTransmissions(params)
     .then(response => {
