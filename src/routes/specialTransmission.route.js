@@ -40,7 +40,7 @@ router.get('/specialtransmission', isAuthenticated, correctSecurityLevel, async 
 
 })
 
-router.put('/specialTransmission', isAuthenticated, correctSecurityLevel, (req, res) => {
+router.put('/specialtransmission', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { name, startTransmission, finishTransmission, active, transmissionId } = req.body;
     const data = {
         name,
