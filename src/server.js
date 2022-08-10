@@ -20,7 +20,7 @@ app.use(require('./routes/users.route'));
 app.use(require('./routes/publicity.route'));
 app.use(require('./routes/program.route'));
 app.use(require('./routes/specialTransmission.route'));
-// app.use(require('./routes/programGrid'));
+app.use(require('./routes/programGrid.route'));
 
 
 app.set('port', port || 9000)

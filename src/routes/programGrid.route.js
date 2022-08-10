@@ -3,14 +3,14 @@ const { isAuthenticated, correctSecurityLevel } = require('../middlewares/users.
 const responseCodeError = require('../helpers/responseCodeError');
 const { getFullGrid, getCurrentProgram } = require('../controllers/programGrid.controller');
 
-router.use('/programGrid', (req , res, next) => {
+router.use('/programgrid', (req , res, next) => {
     req.securityLevelRequired = ['admin', 'master'];
     next();
 })
 
 
 
-router.get('/programgrid', isAuthenticated, correctSecurityLevel, (req, res) => {
+router.get('/programgrid', (req, res) => {
     getFullGrid()
     .then(response => res.json(response))
     .catch(e => responseCodeError(e, res));
