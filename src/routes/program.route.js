@@ -26,7 +26,7 @@ router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     })
 })
 
-router.get('/programs', isAuthenticated, correctSecurityLevel, async (req,res) => {
+router.get('/programs', async (req,res) => {
     const { highlighted, id } = req.query;
     getPrograms(highlighted, id)
     .then(response => {
