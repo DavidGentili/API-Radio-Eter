@@ -3,6 +3,15 @@
 ### Endpoints
 #### Users
 
+###### Data Struct
+    name: String, required
+    email: String, required
+    password: String, required
+    securityLevel: String, required, default: 'editor'
+    state: String, required, default: 'active'
+    createdAt: Date
+    LastLog: Date
+
 ###### Auth
     path: /users/auth
     method: get
@@ -53,6 +62,16 @@
 
 #### Ads
 
+###### Data Struct
+    name: String, required
+    urlImage: String
+    altText: String
+    link: String
+    type: String, required
+    createdAt: Date
+    creatorName: String, required
+    creatorId: String, required
+
 ###### Create Ad
     path: /ad
     method: post
@@ -84,6 +103,16 @@
 
 #### Program
 
+###### Data Struct
+    name: String, required
+    startHour: String, required{ type: String, require: true },
+    finishHour: String, required{ type: String, require: true },
+    days : [Boolean], required{ type: [Boolean], require: true },
+    highlighted : Boolean, required
+    urlImage: String{ type: String },
+    creatorName: String, required
+    creatorId: String, required
+
 ###### Create Program
     path: /program
     method: post
@@ -113,6 +142,14 @@
 
 
 #### Special transmission
+
+###### Data Struct
+    name: String, required
+    startTransmission: Date, required
+    finishTransmission: Date, required
+    active : Boolean, required
+    creatorName: String, required
+    creatorId: String, required
 
 ###### Create transmission
     path: /specialtransmission
