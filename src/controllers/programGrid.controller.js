@@ -38,13 +38,14 @@ const getTranmission = async () => {
 
 const isCurrentProgram = (program) => {
     const now = new Date(Date.now());
+    
     const startDate = new Date(Date.now());
     const finishDate = new Date(Date.now());
     const [startHour, startMinute] = program.startHour.split(':');
     const [finishHour, finishMinute] = program.finishHour.split(':');
     startDate.setHours(Number(startHour), Number(startMinute), 0);
     finishDate.setHours(Number(finishHour),Number(finishMinute),0);
-    console.log(now.toLocaleTimeString(),startDate.toLocaleTimeString(), finishDate.toLocaleTimeString(), startDate <= now && finishDate >= now)
+    console.log(now.getTimezoneOffset(),now.toTimeString(),startDate.toTimeString(), finishDate.toTimeString(), startDate <= now && finishDate >= now)
     return (startDate <= now && finishDate >= now) ? true : false;
 }
 
