@@ -44,6 +44,7 @@ const isCurrentProgram = (program) => {
     const [finishHour, finishMinute] = program.finishHour.split(':');
     startDate.setHours(Number(startHour), Number(startMinute), 0);
     finishDate.setHours(Number(finishHour),Number(finishMinute),0);
+    console.log(startDate.toLocaleTimeString(), finishHour.toLocaleTimeString(), startDate <= now && finishDate >= now)
     return (startDate <= now && finishDate >= now) ? true : false;
 }
 
@@ -51,7 +52,6 @@ const getProgram = async () => {
     const today = new Date(Date.now()).getDay();
     const programs = await getDayGrid(today-1);
     const currentprogram = programs.find(program => isCurrentProgram(program));
-    console.log(currentprogram);
     return currentprogram ? {...formatObjectResponse(currentprogram), type: 'program'} : undefined;
 }
 
