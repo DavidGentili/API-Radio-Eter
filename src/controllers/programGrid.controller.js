@@ -16,7 +16,7 @@ const getFullGrid = async () => {
     return grid;
 }
 
-//Retorna los programas que se emiten el dia de la fecha
+//Retorna los programas que se emiten el dia ingresado
 const getDayGrid = async (day) => {
     const queryPrograms = await getProgramsByDay(day);
     const programs = (Array.isArray(queryPrograms)) ? queryPrograms.map(program => formatObjectResponse(program)) : [formatObjectResponse(queryPrograms)];
@@ -38,8 +38,8 @@ const getTranmission = async () => {
 
 const isCurrentProgram = (program) => {
     const now = new Date(Date.now());
-    const startDate = new Date();
-    const finishDate = new Date();
+    const startDate = new Date(Date.now());
+    const finishDate = new Date(Date.now());
     const [startHour, startMinute] = program.startHour.split(':');
     const [finishHour, finishMinute] = program.finishHour.split(':');
     startDate.setHours(Number(startHour), Number(startMinute), 0);
@@ -50,6 +50,7 @@ const isCurrentProgram = (program) => {
 const getProgram = async () => {
     const today = new Date(Date.now()).getDay();
     const programs = await getDayGrid(today-1);
+    console.log(programs)
     const currentprogram = programs.find(program => isCurrentProgram(program));
     return currentprogram ? {...formatObjectResponse(currentprogram), type: 'program'} : undefined;
 }
