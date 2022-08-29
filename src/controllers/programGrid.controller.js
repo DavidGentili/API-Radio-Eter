@@ -50,15 +50,14 @@ const isCurrentProgram = (program) => {
 const getProgram = async () => {
     const today = new Date(Date.now()).getDay();
     const programs = await getDayGrid(today-1);
-    console.log(programs)
     const currentprogram = programs.find(program => isCurrentProgram(program));
+    console.log(currentprogram);
     return currentprogram ? {...formatObjectResponse(currentprogram), type: 'program'} : undefined;
 }
 
 const getCurrentProgram = async () => {
     const transmission = await getTranmission();
     const response = transmission ? transmission : await getProgram();
-    console.log(response);
     return response ? response : { message: 'Radio Eter MDP'} 
 }
 
