@@ -58,7 +58,6 @@ const getCurrentProgram = async () => {
     const transmission = await getTranmission();
     const response = transmission ? transmission : await getProgram();
     return response ? response : { message: 'Radio Eter MDP'} 
-    // return transmission ? transmission : await getProgram();
 }
 
 module.exports = { getFullGrid, getCurrentProgram}
