@@ -51,12 +51,14 @@ const getProgram = async () => {
     const today = new Date(Date.now()).getDay();
     const programs = await getDayGrid(today-1);
     const currentprogram = programs.find(program => isCurrentProgram(program));
-    return currentprogram ? {...formatObjectResponse(currentprogram), type: 'program'} : { type: undefined};
+    return currentprogram ? {...formatObjectResponse(currentprogram), type: 'program'} : undefined;
 }
 
 const getCurrentProgram = async () => {
     const transmission = await getTranmission();
-    return transmission ? transmission : await getProgram();
+    const response = transmission ? transmission : await getProgram();
+    return response ? response : { message: 'Radio Eter MDP'} 
+    // return transmission ? transmission : await getProgram();
 }
 
 module.exports = { getFullGrid, getCurrentProgram}

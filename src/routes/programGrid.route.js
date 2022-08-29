@@ -1,12 +1,6 @@
 const router = require('express').Router();
-const { isAuthenticated, correctSecurityLevel } = require('../middlewares/users.middlewares');
 const responseCodeError = require('../helpers/responseCodeError');
 const { getFullGrid, getCurrentProgram } = require('../controllers/programGrid.controller');
-
-router.use('/programgrid', (req , res, next) => {
-    req.securityLevelRequired = ['admin', 'master'];
-    next();
-})
 
 
 
