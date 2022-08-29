@@ -53,7 +53,7 @@ const isCurrentProgram = (program) => {
     const [finishHour, finishMinute] = program.finishHour.split(':');
     startDate.setHours(Number(startHour), Number(startMinute), 0);
     finishDate.setHours(Number(finishHour),Number(finishMinute),0);
-    console.log(now.toLocalTimeString(),startDate.toLocalTimeString(), finishDate.toLocalTimeString(), startDate <= now && finishDate >= now)
+    console.log(now.toLocaleTimeString(),startDate.toLocaleTimeString(), finishDate.toLocaleTimeString(), startDate <= now && finishDate >= now)
     return (startDate <= now && finishDate >= now) ? true : false;
 }
 
