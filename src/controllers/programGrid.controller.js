@@ -40,7 +40,8 @@ const getNow = () => {
     const now = new Date(Date.now());
     const offsetDiference = now.getTimezoneOffset() - 180;
     const newHour = now.getHours() - offsetDiference/60;
-    now.setHours(now.getHours() - newHour, now.getMinutes(), now.getSeconds())
+    now.setHours(newHour, now.getMinutes(), now.getSeconds())
+    console.log(now);
     return now;
 }
 
