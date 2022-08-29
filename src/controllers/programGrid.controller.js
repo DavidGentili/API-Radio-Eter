@@ -57,6 +57,7 @@ const getProgram = async () => {
 const getCurrentProgram = async () => {
     const transmission = await getTranmission();
     const response = transmission ? transmission : await getProgram();
+    console.log(response);
     return response ? response : { message: 'Radio Eter MDP'} 
 }
 
