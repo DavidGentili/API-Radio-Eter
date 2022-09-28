@@ -1,19 +1,17 @@
 const { securityLevels } = require('../helpers/securityLvl');
+const { isArray, isString, isNumber, isBoolean } = require('./checkTypes');
 
-const checkName = (name) => (typeof(name) !== 'string' || name.length < 4) ?  false : true;
-const checkHighlighted = (highlighted) => typeof(highlighted) !== 'boolean' ? false : true;
-const checkCreatorName = (creatorName) => typeof(creatorName) !== 'string' ? false : true; 
-const checkCreatorId = (creatorId) => typeof(creatorId) !== 'string' ? false : true; 
-const checkDays = (days) => (!Array.isArray(days) || !days.every(day => typeof(day) === 'boolean') || days.length !== 7) ? false : true;
-const checkSecurityLevel = (securityLevel) => (typeof(securityLevel) !== 'string' || !securityLevels.includes(securityLevel.toLowerCase())) ? false : true;
-const checkId = (id) => (typeof(id) !== 'string' || id.length !== 24) ? false : true;
-const checkBoolean = (bool) => (typeof(bool) !== 'boolean') ? false : true;
-const checkTypePublicity = (type) => (
-    typeof(type) !== 'string' || (type.toLowerCase() !== 'oficial' && type.toLowerCase() !== 'standard')
-) ? false : true;
+const checkNameOrTitle = (name) => (isString(name) && name.length >= 4)
+const checkHighlighted = (highlighted) => isBoolean(highlighted);
+const checkCreatorId = (creatorId) => (isString(creatorId) && creatorId.length === 24); 
+const checkDays = (days) => (days.isArray && days.every(day => isBoolean(day)) && days.length === 7)
+const checkSecurityLevel = (securityLevel) => ( isString(securityLevel) && securityLevels.includes(securityLevel.toLowerCase()) );
+const checkId = (id) => (isString(id) && id.length === 24);
+const checkTypePublicity = (type) => ( isString(type) && (type.toLowerCase() === 'oficial' || type.toLowerCase() === 'standard') )
+const checkMediaContent= (mediaContent) => (isArray(mediaContent) && mediaContent.every(media => isString(media)));
 const checkEmail = (email) => {
     const re = /^([\da-zA-Z_\.-]+)@([\da-zA-Z\.-]+)\.([a-zA-Z\.]{2,6})$/;
-    return (typeof(email) !== 'string' || !re.exec(email)) ? false : true;
+    return (isString(email) && re.exec(email));
 }
     
 
@@ -22,7 +20,7 @@ const checkEmail = (email) => {
 const checkUserData = ({email, name, securityLevel}) => {
     if(!securityLevel || !checkSecurityLevel(securityLevel)) return 'Nivel de seguridad';
     if(!email || !checkEmail(email)) return 'Mail'
-    if(!name || !checkName) return 'Nombre'
+    if(!name || !checkNameOrTitle) return 'Nombre'
     return true;
 }
 
@@ -42,18 +40,18 @@ const checkTime = (time) => {
 //en el schema de la base de datos, en caso de que esten correctos los atributos retorna true, 
 //caso constrario retorna el nombre del atributo incorrecto
 const checkNewProgramData = ({name, startHour,finishHour, highlighted, days, creatorName, creatorId}) => {
-    if(!name || !checkName(name)) return 'Nombre';
+    if(!name || !checkNameOrTitle(name)) return 'Nombre';
     if(!startHour || !checkTime(startHour)) return 'Hora de inicio';
     if(!finishHour || !checkTime(finishHour)) return 'Hora de finalizacion';
     if(highlighted === undefined || !checkHighlighted(highlighted)) return 'Destacado';
     if(!days || !checkDays(days)) return 'Dias'
-    if(!creatorName || !checkCreatorName(creatorName)) return 'Nombre del creador'
+    if(!creatorName || !isArray(creatorName)) return 'Nombre del creador'
     if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador'
     return true; 
 }
 
 const checkUpdateProgramData = ({name, startHour, finishHour, highlighted, days, programId}) => {
-    if(name && !checkName(name)) return 'Nombre';
+    if(name && !checkNameOrTitle(name)) return 'Nombre';
     if(startHour && !checkTime(startHour)) return 'Hora de inicio';
     if(finishHour && !checkTime(finishHour)) return 'Hora de finalizacion';
     if(highlighted !== undefined && !checkHighlighted(highlighted)) return 'Destacado';
@@ -73,26 +71,35 @@ const checkTransmissionDate = (startDate, finishDate) => {
 }
 
 const checkNewSpecialTransmission = ({ name, startTransmission, finishTransmission, creatorName, creatorId }) => {
-    if(!name || !checkName(name)) return 'Nombre';
+    if(!name || !checkNameOrTitle(name)) return 'Nombre';
     if(!checkTransmissionDate(startTransmission, finishTransmission)) return 'fecha de transmision';
     if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador';
-    if(!creatorName || !checkCreatorName(creatorName)) return 'Nombre del creador'
+    if(!creatorName || !isArray(creatorName)) return 'Nombre del creador'
     return true;
 }
 
 const checkUpdateSpecialTransmission = ({ name, startTransmission, finishTransmission, active, transmissionId }) => {
-    if(name && !checkName(name)) return 'Nombre';
+    if(name && !checkNameOrTitle(name)) return 'Nombre';
     if((startTransmission || finishTransmission) && !checkTransmissionDate(startTransmission, finishTransmission)) return 'fecha de transmision';
     if((startTransmission  || !finishTransmission) && (!startTransmission || finishTransmission) && checkTransmissionDate(startTransmission,finishTransmission))
-    if(active && !checkBoolean(active)) return 'activo'
+    if(active && !isBoolean(active)) return 'activo'
     if(!transmissionId || !checkId(transmissionId)) return 'Id de transmision';
     return true;
 }
 
 const checkNewPublicityData = ({ name, type }) => {
-    if(!name || !checkName(name)) {return 'Nombre'};
+    if(!name || !checkNameOrTitle(name)) {return 'Nombre'};
     if(!type || !checkTypePublicity(type)) return 'Tipo';
     return true;
+}
+
+const checkNewReportData = (reportData) => {
+    const { title, description, content, mediaContent, mainImageUrl } = reportData;
+    if(!title || !checkNameOrTitle(title)) return 'Titulo';
+    if(description && !checkNameOrTitle(description)) return 'Descripcion';
+    if(!content || !isString(content)) return 'Contenido Principal';
+    if(mainImageUrl && !isString(mainImageUrl)) return 'Imagen principal';
+    if(mediaContent && !checkMediaContent(mediaContent)) return 'Contenido multimedia';
 }
 
 
@@ -104,4 +111,5 @@ module.exports = {
     checkNewSpecialTransmission,
     checkUpdateSpecialTransmission,
     checkNewPublicityData,
+    checkNewReportData,
 }
