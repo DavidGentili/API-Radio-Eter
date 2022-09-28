@@ -1,17 +1,18 @@
 const fs = require('fs');
 
 const createTmpImageFile = (name, data) => {
-  fs.writeFileSync(`./public/${name}`, data);
+    if(!fs.existsSync(`./public/${name}`))
+        fs.writeFileSync(`./public/${name}`, data);
 }
 
 const existFile = (name) =>{
-  return fs.existsSync('./public/' + name);
+    return fs.existsSync('./public/' + name);
 }
 
 const getNewFileName = (file, base) => {
-  const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-  const extension = file.mimetype.split('/').pop();
-  return `${base}-${uniqueSuffix}.${extension}`;
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    const extension = file.mimetype.split('/').pop();
+    return `${base}-${uniqueSuffix}.${extension}`;
 }
 
 

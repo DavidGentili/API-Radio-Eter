@@ -24,7 +24,6 @@ const createFile = async (name, data) => {
         throw { code: 500, response: { message : 'Error al crear el archivo'}};
     const newFile = new StorageFile({ name, data });
     await newFile.save();
-    console.log(name);
     createTmpImageFile(name, data);
     return { message: 'Archivo creado con exito' };
 }
