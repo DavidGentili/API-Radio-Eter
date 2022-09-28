@@ -1,7 +1,6 @@
 const fs = require('fs');
 
 const createTmpImageFile = (name, data) => {
-    if(!fs.existsSync(`./public/${name}`))
         fs.writeFileSync(`./public/${name}`, data);
 }
 
