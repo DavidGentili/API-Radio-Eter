@@ -194,3 +194,16 @@
     return: 200 - {program} || 4-- errorMessage
 
 
+#### Reports
+
+###### Data Struct
+    title: String, required
+    description: String
+    content : String, required
+    mediaContent : [String]
+    mainImageUrl : String
+    creatorName: String, required
+    creatorId: String, required
+    createdAt : Date, required
+    lastModify : Date, required
+
