@@ -32,7 +32,7 @@ const getTranmission = async () => {
     if(!Array.isArray(transmissions))
         transmissions = [transmissions];
     const now = new Date(Date.now())
-    const currentTranmission = transmissions.find(transmission => (transmission.startTransmission < now && transmission.finishTransmission));
+    const currentTranmission = transmissions.find(transmission => (transmission.startTransmission < now && transmission.finishTransmission > now ));
     return currentTranmission !== undefined ? {...formatObjectResponse(currentTranmission), type: 'transmission'} : undefined;
 }
 
