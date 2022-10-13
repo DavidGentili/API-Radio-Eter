@@ -9,6 +9,16 @@ const getFormatParameters = (object, keys) => {
     return aux;
 }
 
+const getQueryParams = (object) => {
+    const queryParams = {};
+    const keys = Object.keys(object);
+    keys.forEach(key =>{
+        if(typeof(object[key]) !== 'undefined' && typeof(object[key] !== 'null'))
+            queryParams[key] = object[key];
+    });
+    return queryParams;
+}
+
 const formatObjectResponse = (object) => {
     if(!object)
         return undefined;
@@ -26,4 +36,5 @@ const formatObjectResponse = (object) => {
 module.exports = { 
     getFormatParameters,
     formatObjectResponse,
+    getQueryParams,
 }
