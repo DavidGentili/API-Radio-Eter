@@ -1,9 +1,13 @@
 const StorageFile = require('../models/StorageFile');
 const { formatObjectResponse } = require('../helpers/formatData');
-const { createTmpImageFile, getNewFileName } = require('../helpers/storage');
+const { createTmpImageFile, getNewFileName, removeFile } = require('../helpers/storage');
 const { host } = require('../config');
 const { checkId } = require('../helpers/checkData');
 const { getQueryParams } = require('../helpers/formatData');
+
+const corretParameters = (id, urlName) => {
+    return urlName || (id && checkId(id))
+}
 
 //Obtiene todos los archivos guardados en la BD
 const getFiles = async ({ id, urlName }) => {
@@ -17,7 +21,6 @@ const getFilesWithoutData = async ( { id , urlName }) => {
     const queryParams = getQueryParams( { urlName } );
     let files = (id) ? await StorageFile.findById(id).lean() : await StorageFile.find( queryParams ).lean();
     files = (Array.isArray(files)) ? files.map(file => formatObjectResponse(file)) : [formatObjectResponse(files)];
-    console.log(files.length);
     const responseFiles =  files.map(file => {
         const { id, name, urlName } = file;
         return {
@@ -27,7 +30,6 @@ const getFilesWithoutData = async ( { id , urlName }) => {
             url : `${host}/public/${file.urlName}`,
         }
     });
-    console.log(responseFiles);
     return responseFiles
 }
 
@@ -40,31 +42,34 @@ const createFile = async ( { name, file, type } ) => {
     return await createNewFile( name, data, urlName);
 }
 
-//Se encarga de eliminar el archivo
-const deleteFile = async( {id, urlName } ) => {
-    if(!id || !urlName || (id && !checkId(id)))
-        throw { code: 500, response: { message : 'Error al eliminar el archivo'}};
-    const queryParams = getQueryParams(urlName);
-    const currentFile = (id) ? await StorageFile.findById(id).lean() : await StorageFile.find( queryParams ).lean();
-    if(!currentFile)
-        throw { code: 500, response: { message : 'Error al eliminar el archivo'}};
-    
-    id = currentFile.id;
-    await StorageFile.findByIdAndDelete(id);
-    return { message: 'Archivo eliminado con exito' };
-}
-
 const createNewFile = async ( name, data, urlName ) => {
     if(!urlName || urlName.length < 3 || !data)
         throw { code: 500, response: { message : 'Error al crear el archivo'}};
     name = name ? name : 'Nombre';
-    const currentFile = await getFiles(urlName);
+    const currentFile = await getFiles({ urlName });
     if(currentFile && currentFile[0]) 
-        throw { code: 500, response: { message : 'Error al crear el archivo'}};
+        throw { code: 500, response: { message : 'Error al crear el archivosss'}};
     const newFile = new StorageFile({ name, data, urlName });
     await newFile.save();
     createTmpImageFile(urlName, data);
     return { message: 'Archivo creado con exito' };
 }
+
+//Se encarga de eliminar el archivo
+const deleteFile = async( {id, urlName } ) => {
+    if(!corretParameters(id, urlName))
+        throw { code: 500, response: { message : 'Error al obtener el archivo'}};
+    let currentFile = await getFiles( { id, urlName });
+    currentFile = (currentFile && Array.isArray(currentFile) ? currentFile[0] : currentFile);
+    if(!currentFile)
+        throw { code: 500, response: { message : 'Error al eliminar el archivo'}};
+    urlName = currentFile.urlName;
+    id = currentFile.id;
+    console.log(id + " " + urlName);
+    await StorageFile.findByIdAndDelete(id);
+    removeFile(urlName);
+    return { message: 'Archivo eliminado con exito' };
+}
+
 
 module.exports = { getFiles, getFilesWithoutData, createFile, deleteFile}
