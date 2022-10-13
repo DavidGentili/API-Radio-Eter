@@ -8,7 +8,6 @@ const checkIfExistFile = async (req, res, next) => {
             let tempFile = await getFiles( { urlName : fileName} );
             tempFile = (tempFile && Array.isArray(tempFile)) ? tempFile[0] : tempFile;
             if(tempFile){
-                console.log('Here')
                 const { urlName, data } = tempFile;
                 createTmpImageFile(urlName, data.buffer);
             }
