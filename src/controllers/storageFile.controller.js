@@ -1,6 +1,6 @@
 const StorageFile = require('../models/StorageFile');
 const { formatObjectResponse } = require('../helpers/formatData');
-const { createTmpImageFile } = require('../helpers/storage');
+const { createTmpImageFile, getNewFileName } = require('../helpers/storage');
 const { host } = require('../config');
 const { checkId } = require('../helpers/checkData');
 const { getQueryParams } = require('../helpers/formatData');
@@ -32,17 +32,12 @@ const getFilesWithoutData = async ( { id , urlName }) => {
 }
 
 //Se encarga de almacenar un archivo en la BD
-const createFile = async ( { name, data, urlName } ) => {
-    if(!urlName || urlName.length < 3 || !data)
-        throw { code: 500, response: { message : 'Error al crear el archivo'}};
-    name = name ? name : 'Nombre';
-    const currentFile = await getFiles(urlName);
-    if(currentFile && currentFile[0]) 
-        throw { code: 500, response: { message : 'Error al crear el archivo'}};
-    const newFile = new StorageFile({ name, data, urlName });
-    await newFile.save();
-    createTmpImageFile(name, data);
-    return { message: 'Archivo creado con exito' };
+const createFile = async ( { name, file, type } ) => {
+    const urlName = getNewFileName(file, type ? type : 'media');
+    if(!file || !file.data)
+        throw { code : 500, response : { message : 'Error al crear el archivo'}}
+    const { data } = file;
+    return await createNewFile( name, data, urlName);
 }
 
 //Se encarga de eliminar el archivo
@@ -57,6 +52,19 @@ const deleteFile = async( {id, urlName } ) => {
     id = currentFile.id;
     await StorageFile.findByIdAndDelete(id);
     return { message: 'Archivo eliminado con exito' };
+}
+
+const createNewFile = async ( name, data, urlName ) => {
+    if(!urlName || urlName.length < 3 || !data)
+        throw { code: 500, response: { message : 'Error al crear el archivo'}};
+    name = name ? name : 'Nombre';
+    const currentFile = await getFiles(urlName);
+    if(currentFile && currentFile[0]) 
+        throw { code: 500, response: { message : 'Error al crear el archivo'}};
+    const newFile = new StorageFile({ name, data, urlName });
+    await newFile.save();
+    createTmpImageFile(urlName, data);
+    return { message: 'Archivo creado con exito' };
 }
 
 module.exports = { getFiles, getFilesWithoutData, createFile, deleteFile}
