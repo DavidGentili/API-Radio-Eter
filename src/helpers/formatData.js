@@ -13,7 +13,7 @@ const getQueryParams = (object) => {
     const queryParams = {};
     const keys = Object.keys(object);
     keys.forEach(key =>{
-        if(typeof(object[key]) !== 'undefined' && typeof(object[key] !== 'null'))
+        if(typeof(object[key]) !== 'undefined' && typeof(object[key]) !== 'null')
             queryParams[key] = object[key];
     });
     return queryParams;
