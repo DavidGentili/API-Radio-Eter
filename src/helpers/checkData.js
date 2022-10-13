@@ -2,13 +2,21 @@ const { securityLevels } = require('../helpers/securityLvl');
 const { isArray, isString, isNumber, isBoolean } = require('./checkTypes');
 
 const checkNameOrTitle = (name) => (isString(name) && name.length >= 4)
+
 const checkHighlighted = (highlighted) => isBoolean(highlighted);
+
 const checkCreatorId = (creatorId) => (isString(creatorId) && creatorId.length === 24); 
+
 const checkDays = (days) => (days.isArray && days.every(day => isBoolean(day)) && days.length === 7)
+
 const checkSecurityLevel = (securityLevel) => ( isString(securityLevel) && securityLevels.includes(securityLevel.toLowerCase()) );
+
 const checkId = (id) => (isString(id) && id.length === 24);
+
 const checkTypePublicity = (type) => ( isString(type) && (type.toLowerCase() === 'oficial' || type.toLowerCase() === 'standard') )
+
 const checkMediaContent= (mediaContent) => (isArray(mediaContent) && mediaContent.every(media => isString(media)));
+
 const checkEmail = (email) => {
     const re = /^([\da-zA-Z_\.-]+)@([\da-zA-Z\.-]+)\.([a-zA-Z\.]{2,6})$/;
     return (isString(email) && re.exec(email));
@@ -112,4 +120,5 @@ module.exports = {
     checkUpdateSpecialTransmission,
     checkNewPublicityData,
     checkNewReportData,
+    checkId,
 }
