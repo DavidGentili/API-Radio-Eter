@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const { getFilesWithoutData, getFiles } = require('../controllers/storageFile.controller');
+const { getFilesWithoutData, createFile, deleteFile } = require('../controllers/storageFile.controller');
+const responseCodeError = require('../helpers/responseCodeError');
 
 router.get('/media', (req, res) => {
     const { id, urlName } = req.query;
@@ -15,8 +16,20 @@ router.get('/media', (req, res) => {
 
 router.post('/media', (req, res) => {
     const { name, type } = req;
-    const { file } =  req.files;
-    createFile( { name, file, type } )
+    const { mediaFile } =  req.files;
+    createFile( { name, file : mediaFile, type } )
+    .then(response => {
+        res.status = 200;
+        res.json(response);
+    })
+    .catch(e => {
+        responseCodeError(e,res);
+    })
+})
+
+router.delete('/media', (req, res) => {
+    const { id, urlName } = req.query;
+    deleteFile( {id, urlName} )
     .then(response => {
         res.status = 200;
         res.json(response);
