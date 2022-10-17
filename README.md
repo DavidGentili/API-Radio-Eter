@@ -75,15 +75,14 @@
 ###### Create Ad
     path: /ad
     method: post
-    headers: authorization, Content-Type : multipart/form-data
-    payload: name, altText (notRequired), link (notRequired), type, imageFile, 
+    headers: authorization,
+    payload: name, altText (notRequired), link (notRequired), type, urlImage 
     return: 200 - {checkMessage} || 4-- errorMessage
 
 ###### Get Ad
     path: /ad
     method: post
     headers: authorization
-    payload: adId, name (notRequired), altText (notRequired), link (notRequired), type (notRequired)
     query: type (optional);
     return: 200 - [ads] || 4-- errorMessage
 
@@ -91,7 +90,7 @@
     path: /ad
     method: post
     headers: authorization, Content-Type : multipart/form-data
-    payload: adId, name (notRequired), altText (notRequired), link (notRequired), type (notRequired)
+    payload: adId, name (notRequired), altText (notRequired), link (notRequired), type (notRequired), urlImage
     return: 200 - {checkMessage} || 4-- errorMessage
 
 ###### Delete Ad
@@ -117,7 +116,7 @@
     path: /program
     method: post
     headers: authorization
-    payload: name, startHour, finishHour, highlightled, days,  
+    payload: name, startHour, finishHour, highlightled, days, urlImage
     return: 200 - {checkMessage} || 4-- errorMessage
 
 ###### Get Program
@@ -130,7 +129,7 @@
     path: /program
     method: put
     headers: authorization
-    payload: ProgramId, name, startHour, finishHour, highlightled, days,  
+    payload: ProgramId, name, startHour, finishHour, highlightled, days, urlImage  
     return: 200 - {checkMessage} || 4-- errorMessage
 
 ###### Delete Program
@@ -192,6 +191,34 @@
     path: /currentprogram
     method: post
     return: 200 - {program} || 4-- errorMessage
+
+#### Storage File
+
+###### Data Struct
+    name : String, required
+    urlName : String, required
+    data : Buffer, required
+
+###### Get files
+    path: /media
+    method: get
+    headers: authorization
+    query: id, urlName
+    return: 200 - {medias} || 4-- errorMessage
+
+###### Create file
+    path: /media
+    method: post
+    headers: authorization, Content-Type : multipart/form-data
+    body : {name, type, mediaFile}
+    return: 200 - {message} || 4-- errorMessage
+
+###### delete file
+    path: /media
+    method: post
+    headers: authorization, Content-Type : multipart/form-data
+    body: id || urlName,
+    return: 200 - {message} || 4-- errorMessage
 
 
 #### Reports
