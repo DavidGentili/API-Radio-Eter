@@ -1,9 +1,6 @@
 const Publicity = require('../models/Publicity');
 const { formatObjectResponse, getFormatParameters } = require('../helpers/formatData');
-const { createFile, deleteFileByName } = require ('./storageFile.controller');
 const { checkNewPublicityData } = require('../helpers/checkData');
-const { host } = require('../config');
-const { getNewFileName } = require('../helpers/storage');
 
 //Crea un nuevo anuncio, asignando el nombre al archivo, y almacenandolo.
 const createAd = async ( {name, altText, link, type, creatorName, creatorId, urlImage} ) => {
