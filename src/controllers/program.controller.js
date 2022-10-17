@@ -29,7 +29,7 @@ const getProgramsByDay = async (day) => {
 const createProgram = async (data) => {
     const check = checkNewProgramData(data);
     if(typeof(check) === 'string')
-        throw { status: 400 , response: { message : `Se ha ingresado un ${check} incorrecto`}}
+        throw { status: 400 , response: { message : `Se ha ingresado ${check} incorrecto`}}
     const { name, startHour, finishHour, highlighted, days, creatorName, creatorId, urlImage } = data;
     const programData = {name, startHour, finishHour, highlighted, days, creatorName, creatorId, urlImage };
     const newProgram = new Program(programData);

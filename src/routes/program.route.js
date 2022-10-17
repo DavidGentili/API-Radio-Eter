@@ -9,16 +9,10 @@ router.use('/programs', (req , res, next) => {
     next();
 })
 
-const getDays = (days) => days ? days.split(',').map(day => day ==='true' ? true : false) : undefined;
-
-const getHighlighted = (highlighted) => (typeof(highlighted) !== 'undefined' && highlighted.toLowerCase() === 'true') ? true : false;
-
 router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     const creatorId = req.user.id;
     const creatorName = req.user.name;
-    const highlighted =  getHighlighted(req.body.highlighted);
-    const days = getDays(req.body.days);
-    createProgram({ ...req.body, creatorName, creatorId, highlighted, days })
+    createProgram({ ...req.body, creatorName, creatorId })
     .then(response => {
         res.status = 200;
         res.json(response);
@@ -41,9 +35,7 @@ router.get('/programs', async (req,res) => {
 })
 
 router.put('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const highlighted = getHighlighted(req.body.highlighted); 
-    const days =  getDays(req.body.days);
-    updateProgram({ ...req.body, highlighted, days})
+    updateProgram({ ...req.body})
     .then(response => {
         res.status = 200;
         res.json(response);
