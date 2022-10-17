@@ -69,7 +69,6 @@ router.get('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
         res.json(response);
     })
     .catch((e) => {
-        console.log(e);
         responseCodeError(e, res)
     })
 })
