@@ -1,8 +1,15 @@
 const router = require('express').Router();
 const { getFilesWithoutData, createFile, deleteFile } = require('../controllers/storageFile.controller');
 const responseCodeError = require('../helpers/responseCodeError');
+const { isAuthenticated, correctSecurityLevel } = require('../middlewares/users.middlewares');
 
-router.get('/media', (req, res) => {
+//asigna los niveles de seguridad requeridos para esta ruta
+router.use('/media', (req , res, next) => {
+    req.securityLevelRequired = ['editor','admin', 'master'];
+    next();
+})
+
+router.get('/media', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { id, urlName } = req.query;
     getFilesWithoutData( { id, urlName } )
     .then(response => {
@@ -14,7 +21,7 @@ router.get('/media', (req, res) => {
     })
 })
 
-router.post('/media', (req, res) => {
+router.post('/media', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { name, type } = req;
     const { mediaFile } =  req.files;
     createFile( { name, file : mediaFile, type } )
@@ -27,7 +34,7 @@ router.post('/media', (req, res) => {
     })
 })
 
-router.delete('/media', (req, res) => {
+router.delete('/media', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { id, urlName } = req.query;
     deleteFile( {id, urlName} )
     .then(response => {
