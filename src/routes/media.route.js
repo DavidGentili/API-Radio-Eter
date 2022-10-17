@@ -35,8 +35,8 @@ router.post('/media', isAuthenticated, correctSecurityLevel, (req, res) => {
 })
 
 router.delete('/media', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const { id, urlName } = req.query;
-    deleteFile( {id, urlName} )
+    const { mediaId, urlName } = req.body;
+    deleteFile( {mediaId, urlName} )
     .then(response => {
         res.status = 200;
         res.json(response);

@@ -56,17 +56,17 @@ const createNewFile = async ( name, data, urlName ) => {
 }
 
 //Se encarga de eliminar el archivo
-const deleteFile = async( {id, urlName } ) => {
-    if(!corretParameters(id, urlName))
-        throw { code: 500, response: { message : 'Error al obtener el archivo'}};
-    let currentFile = await getFiles( { id, urlName });
+const deleteFile = async( {mediaId, urlName } ) => {
+    if(!corretParameters(mediaId, urlName))
+        throw { code: 500, response: { message : 'Parametros incorrectos'}};
+    let currentFile = await getFiles( { mediaId, urlName });
     currentFile = (currentFile && Array.isArray(currentFile) ? currentFile[0] : currentFile);
     if(!currentFile)
         throw { code: 500, response: { message : 'Error al eliminar el archivo'}};
     urlName = currentFile.urlName;
-    id = currentFile.id;
+    mediaId = currentFile.id;
     console.log(id + " " + urlName);
-    await StorageFile.findByIdAndDelete(id);
+    await StorageFile.findByIdAndDelete(mediaId);
     removeFile(urlName);
     return { message: 'Archivo eliminado con exito' };
 }
