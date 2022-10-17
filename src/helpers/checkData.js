@@ -47,22 +47,24 @@ const checkTime = (time) => {
 //Se encargar de comprobar la informacion de un programa, constatando su informacion principal definida 
 //en el schema de la base de datos, en caso de que esten correctos los atributos retorna true, 
 //caso constrario retorna el nombre del atributo incorrecto
-const checkNewProgramData = ({name, startHour,finishHour, highlighted, days, creatorName, creatorId}) => {
+const checkNewProgramData = ({name, startHour, finishHour, highlighted, days, creatorName, creatorId, urlImage}) => {
     if(!name || !checkNameOrTitle(name)) return 'Nombre';
     if(!startHour || !checkTime(startHour)) return 'Hora de inicio';
     if(!finishHour || !checkTime(finishHour)) return 'Hora de finalizacion';
     if(highlighted === undefined || !checkHighlighted(highlighted)) return 'Destacado';
-    if(!days || !checkDays(days)) return 'Dias'
-    if(!creatorName || !isArray(creatorName)) return 'Nombre del creador'
-    if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador'
+    if(!days || !checkDays(days)) return 'Dias';
+    if(urlImage && !isString(urlImage)) return 'Url de la imagen';
+    if(!creatorName || !isArray(creatorName)) return 'Nombre del creador';
+    if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador';
     return true; 
 }
 
-const checkUpdateProgramData = ({name, startHour, finishHour, highlighted, days, programId}) => {
+const checkUpdateProgramData = ({name, startHour, finishHour, highlighted, days, programId, urlImage}) => {
     if(name && !checkNameOrTitle(name)) return 'Nombre';
     if(startHour && !checkTime(startHour)) return 'Hora de inicio';
     if(finishHour && !checkTime(finishHour)) return 'Hora de finalizacion';
     if(highlighted !== undefined && !checkHighlighted(highlighted)) return 'Destacado';
+    if(urlImage && !isString(urlImage)) return 'Url de la imagen';
     if(days && !checkDays(days)) return 'Dias'
     if(!programId || !checkId(programId)) return 'id';
     return true;
