@@ -10,11 +10,10 @@ router.use('/ad', (req , res, next) => {
 
 
 router.post('/ad', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const { name, altText, link, type} = req.body;
+    const { name, altText, link, type, urlImage} = req.body;
     const creatorName = req.user.name;
     const creatorId = req.user.id;
-    const { imageFile } = req.files;
-    createAd({name, altText, link, type, creatorName, creatorId, imageFile})
+    createAd({name, altText, link, type, creatorName, creatorId, urlImage})
     .then(response => {
         res.status = 200;
         res.json(response);

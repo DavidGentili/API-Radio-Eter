@@ -16,5 +16,11 @@ const getNewFileName = (file, base) => {
     return `${base}-${uniqueSuffix}.${extension}`;
 }
 
+const removeFile = (name) => {
+    if(existFile(name)){
+        fs.unlinkSync(`./public/${name}`);
+    }
+}
 
-module.exports = { createTmpImageFile, existFile, getNewFileName };
+
+module.exports = { createTmpImageFile, existFile, getNewFileName, removeFile };

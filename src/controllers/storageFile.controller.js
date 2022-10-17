@@ -1,49 +1,75 @@
 const StorageFile = require('../models/StorageFile');
 const { formatObjectResponse } = require('../helpers/formatData');
-const { createTmpImageFile } = require('../helpers/storage');
+const { createTmpImageFile, getNewFileName, removeFile } = require('../helpers/storage');
+const { host } = require('../config');
+const { checkId } = require('../helpers/checkData');
+const { getQueryParams } = require('../helpers/formatData');
+
+const corretParameters = (id, urlName) => {
+    return urlName || (id && checkId(id))
+}
 
 //Obtiene todos los archivos guardados en la BD
-const getFiles = async () => {
-    const files = await StorageFile.find().lean();
+const getFiles = async ({ id, urlName }) => {
+    const queryParams = getQueryParams( { urlName } );
+    const files = (id) ? await StorageFile.findById(id).lean() : await StorageFile.find( queryParams ).lean();
     return (Array.isArray(files)) ? files.map(file => formatObjectResponse(file)) : formatObjectResponse(files);
 }
 
-//Retorna el archivo almacenado en la BD que tiene dicho nombre
-const getFileByName = async ( name ) => {
-    const file = await StorageFile.findOne({ name }).lean();
-    // return file ? formatObjectResponse(file) : undefined;
-    return file;
+//Retorna todos los archivos guardados en la BD sin la data, pero con el link de acceso
+const getFilesWithoutData = async ( { id , urlName }) => {
+    const queryParams = getQueryParams( { urlName } );
+    let files = (id) ? await StorageFile.findById(id).lean() : await StorageFile.find( queryParams ).lean();
+    files = (Array.isArray(files)) ? files.map(file => formatObjectResponse(file)) : [formatObjectResponse(files)];
+    const responseFiles =  files.map(file => {
+        const { id, name, urlName } = file;
+        return {
+            id,
+            name,
+            urlName,
+            url : `${host}/public/${file.urlName}`,
+        }
+    });
+    return responseFiles
 }
 
 //Se encarga de almacenar un archivo en la BD
-const createFile = async (name, data) => {
-    if(!name || name.length < 3 || !data)
+const createFile = async ( { name, file, type } ) => {
+    const urlName = getNewFileName(file, type ? type : 'media');
+    if(!file || !file.data)
+        throw { code : 500, response : { message : 'Error al crear el archivo'}}
+    const { data } = file;
+    return await createNewFile( name, data, urlName);
+}
+
+const createNewFile = async ( name, data, urlName ) => {
+    if(!urlName || urlName.length < 3 || !data)
         throw { code: 500, response: { message : 'Error al crear el archivo'}};
-    const currentFile = await getFileByName(name);
-    if(currentFile) 
-        throw { code: 500, response: { message : 'Error al crear el archivo'}};
-    const newFile = new StorageFile({ name, data });
+    name = name ? name : 'Nombre';
+    const currentFile = await getFiles({ urlName });
+    if(currentFile && currentFile[0]) 
+        throw { code: 500, response: { message : 'Error al crear el archivosss'}};
+    const newFile = new StorageFile({ name, data, urlName });
     await newFile.save();
-    createTmpImageFile(name, data);
+    createTmpImageFile(urlName, data);
     return { message: 'Archivo creado con exito' };
 }
 
-//Elimina un arhcivo de la BD segun un id ingresado
-const deleteFileById = async ( id ) => {
-    if(!id && typeof(id) !== 'string' && id.length !== 24)
-        throw { code: 500, response: { message : 'Error al eliminar el archivo'}};
-    await StorageFile.findByIdAndDelete(id);
-    return { message: 'Archivo eliminado con exito' };
-}
-
-//Elimina un archivo de la BD segun un nombre ingresado
-const deleteFileByName = async ( name ) => {
-    const currentFile = getFileByName(name);
+//Se encarga de eliminar el archivo
+const deleteFile = async( {id, urlName } ) => {
+    if(!corretParameters(id, urlName))
+        throw { code: 500, response: { message : 'Error al obtener el archivo'}};
+    let currentFile = await getFiles( { id, urlName });
+    currentFile = (currentFile && Array.isArray(currentFile) ? currentFile[0] : currentFile);
     if(!currentFile)
         throw { code: 500, response: { message : 'Error al eliminar el archivo'}};
-    const { id } = currentFile;
+    urlName = currentFile.urlName;
+    id = currentFile.id;
+    console.log(id + " " + urlName);
     await StorageFile.findByIdAndDelete(id);
+    removeFile(urlName);
     return { message: 'Archivo eliminado con exito' };
 }
 
-module.exports = { getFiles, getFileByName, createFile, deleteFileById, deleteFileByName}
+
+module.exports = { getFiles, getFilesWithoutData, createFile, deleteFile}

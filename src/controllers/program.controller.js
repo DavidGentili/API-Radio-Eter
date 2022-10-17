@@ -1,23 +1,6 @@
 const Program = require('../models/Program');
-const { host } = require('../config');
 const { checkNewProgramData, checkUpdateProgramData } = require('../helpers/checkData')
-const { createFile, deleteFileByName } = require('./storageFile.controller');
-const { getNewFileName } = require('../helpers/storage');
 const { getFormatParameters, formatObjectResponse } = require('../helpers/formatData');
-
-//Guarda el archivo del programa creado, este archivo en escencia es una imagen
-const saveProgramFile = async (file) => {
-    const fileName = getNewFileName(file, 'program');
-    await createFile(fileName, file.data);
-    return `${host}/public/${fileName}`;
-}
-
-//Si el programa ingresado tiene una imagen asociada, se elimina la misma
-const ifHasUrlImageDeleteIt = async (programId) => {
-    const currentProgram = await Program.findById(programId);
-    if(currentProgram.urlImage)
-        await deleteFileByName(currentProgram.urlImage.split('/').pop());
-}
 
 //Retorna los programas almacenados en la BD, se puede especificar el Id o si es destacado
 const getPrograms = async (highlighted, id) => {
@@ -33,7 +16,7 @@ const getProgramsByDay = async (day) => {
     return await Program.find(filter).lean();
 }
 
-/*Crea un nuevo programa en la BD, se requiere un objeto que contenga (tipos especificado en el modelo de la BD):
+/*Crea un nuevo programa en la BD, se requiere un objeto que contenga:
     name,
     startHour,
     finishHour,
@@ -41,16 +24,14 @@ const getProgramsByDay = async (day) => {
     days,
     creatorName,
     creatorId,
-    ImageFile ? (opcional)
+    urlImage
 */
 const createProgram = async (data) => {
     const check = checkNewProgramData(data);
     if(typeof(check) === 'string')
-        throw { status: 400 , response: { message : `Se ha ingresado un ${check} incorrecto`}}
-    const { name, startHour, finishHour, highlighted, days, creatorName, creatorId, imageFile } = data;
-    const programData = {name, startHour, finishHour, highlighted, days, creatorName, creatorId};
-    if( highlighted && imageFile )
-        programData.urlImage = await saveProgramFile(imageFile);
+        throw { status: 400 , response: { message : `Se ha ingresado ${check} incorrecto`}}
+    const { name, startHour, finishHour, highlighted, days, creatorName, creatorId, urlImage } = data;
+    const programData = {name, startHour, finishHour, highlighted, days, creatorName, creatorId, urlImage };
     const newProgram = new Program(programData);
     await newProgram.save();
     return { message: 'El programa ha sido creado con exito'}
@@ -62,22 +43,17 @@ const createProgram = async (data) => {
     finishHour,
     highlighted,
     days,
-    imageFile ? (opcional)
+    urlImage
  */
 const updateProgram = async (data) => {
     const { programId } = data;
-    let urlImage = undefined;
     const check  = checkUpdateProgramData(data);
     if(typeof(check) === 'string')
         throw { status: 400 , response: { message : `Se ha ingresado un ${check} incorrecto`}};
     const currentProgram = await Program.findById(programId);
     if(!currentProgram)
         throw { status: 400, resposne: { message : 'Se ha ingresado un id incorrecto' }}
-    const { name, startHour, finishHour, highlighted, days } = data;
-    if( (highlighted || (highlighted === undefined && currentProgram.highlighted)) && data.imageFile){
-        ifHasUrlImageDeleteIt(programId);
-        urlImage = await saveProgramFile(data.imageFile);
-    }
+    const { name, startHour, finishHour, highlighted, days, urlImage } = data;
     const programData = getFormatParameters({ name, startHour, finishHour, highlighted, days, urlImage }, ['name', 'startHour', 'finishHour', 'highlighted', 'days', 'urlImage']);
     await Program.findByIdAndUpdate(programId, programData);
     return { message: 'El programa a sido actualizado con exito'};
@@ -91,8 +67,6 @@ const deleteProgram = async (programId) => {
     if(!currentProgram)
         throw { code: 400 , response: { message: 'Id de programa incorrecto' } };
     await Program.findByIdAndDelete(programId);
-    if(currentProgram.highlighted && currentProgram.urlImage)
-        await deleteFileByName(currentProgram.urlImage.split('/').pop());
     return { message: 'El programa ha sido eliminado con exito' };
 }
 

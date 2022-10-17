@@ -9,14 +9,10 @@ router.use('/programs', (req , res, next) => {
     next();
 })
 
-
 router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     const creatorId = req.user.id;
     const creatorName = req.user.name;
-    const imageFile = ( req.files && req.files.imageFile) ? req.files.imageFile : undefined;
-    const highlighted = (typeof(req.body.highlighted) !== 'undefined' && req.body.highlighted.toLowerCase() === 'true') ? true : false; 
-    const days = req.body.days ? req.body.days.split(',').map(day => day==='true' ? true : false) : undefined;
-    createProgram({ ...req.body, creatorName, creatorId, imageFile, highlighted, days })
+    createProgram({ ...req.body, creatorName, creatorId })
     .then(response => {
         res.status = 200;
         res.json(response);
@@ -39,10 +35,7 @@ router.get('/programs', async (req,res) => {
 })
 
 router.put('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const imageFile = (req.files && req.files.imageFile) ? req.files.imageFile : undefined; 
-    const highlighted = (typeof(req.body.highlighted) !== 'undefined') ? (req.body.highlighted.toLowerCase() === 'true' ? true : false) : undefined; 
-    const days =  (req.body.days) ? req.body.days.split(',').map(day => day === 'true' ? true : false) : undefined;
-    updateProgram({ ...req.body, imageFile, highlighted, days})
+    updateProgram({ ...req.body})
     .then(response => {
         res.status = 200;
         res.json(response);
