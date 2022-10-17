@@ -7,7 +7,7 @@ const checkHighlighted = (highlighted) => isBoolean(highlighted);
 
 const checkCreatorId = (creatorId) => (isString(creatorId) && creatorId.length === 24); 
 
-const checkDays = (days) => (days.isArray && days.every(day => isBoolean(day)) && days.length === 7)
+const checkDays = (days) => (isArray(days) && days.every(day => isBoolean(day)) && days.length === 7)
 
 const checkSecurityLevel = (securityLevel) => ( isString(securityLevel) && securityLevels.includes(securityLevel.toLowerCase()) );
 
@@ -54,7 +54,7 @@ const checkNewProgramData = ({name, startHour, finishHour, highlighted, days, cr
     if(highlighted === undefined || !checkHighlighted(highlighted)) return 'Destacado';
     if(!days || !checkDays(days)) return 'Dias';
     if(urlImage && !isString(urlImage)) return 'Url de la imagen';
-    if(!creatorName || !isArray(creatorName)) return 'Nombre del creador';
+    if(!creatorName || !isString(creatorName)) return 'Nombre del creador';
     if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador';
     return true; 
 }
