@@ -3,7 +3,8 @@ const {mongodbURL} = require('./config');
 
 mongoose.connect(mongodbURL)
 .then( () => {
-    console.log('Database connected: ' + mongodbURL.split(':')[1].replaceAll('/','')); 
+    if(mongodbURL && typeof(mongodbURL) === 'string')
+        console.log('Database connected: ' + mongodbURL.split(':')[1].replaceAll('/','')); 
 })
 .catch( (e) => {
     console.error(e);
