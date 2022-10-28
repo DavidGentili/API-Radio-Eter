@@ -64,7 +64,6 @@ const deleteFile = async( {mediaId, urlName } ) => {
         throw { code: 500, response: { message : 'Error al eliminar el archivo'}};
     urlName = currentFile.urlName;
     mediaId = currentFile.id;
-    console.log(mediaId);
     await StorageFile.findByIdAndDelete(mediaId);
     removeFile(urlName);
     return { message: 'Archivo eliminado con exito' };
