@@ -42,10 +42,9 @@ const createFile = async ( { name, file, type } ) => {
     return await createNewFile( name, data, urlName);
 }
 
-const createNewFile = async ( name, data, urlName ) => {
+const createNewFile = async ( name = 'Nombre', data, urlName ) => {
     if(!urlName || urlName.length < 3 || !data)
         throw { code: 500, response: { message : 'Error al crear el archivo'}};
-    name = name ? name : 'Nombre';
     const currentFile = await getFiles({ urlName });
     if(currentFile && currentFile[0]) 
         throw { code: 500, response: { message : 'Error al crear el archivosss'}};
@@ -59,13 +58,13 @@ const createNewFile = async ( name, data, urlName ) => {
 const deleteFile = async( {mediaId, urlName } ) => {
     if(!corretParameters(mediaId, urlName))
         throw { code: 500, response: { message : 'Parametros incorrectos'}};
-    let currentFile = await getFiles( { mediaId, urlName });
+    let currentFile = await getFiles( { id: mediaId, urlName });
     currentFile = (currentFile && Array.isArray(currentFile) ? currentFile[0] : currentFile);
     if(!currentFile)
         throw { code: 500, response: { message : 'Error al eliminar el archivo'}};
     urlName = currentFile.urlName;
     mediaId = currentFile.id;
-    console.log(id + " " + urlName);
+    console.log(mediaId);
     await StorageFile.findByIdAndDelete(mediaId);
     removeFile(urlName);
     return { message: 'Archivo eliminado con exito' };

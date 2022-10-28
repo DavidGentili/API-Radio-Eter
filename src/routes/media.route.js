@@ -22,7 +22,7 @@ router.get('/media', isAuthenticated, correctSecurityLevel, (req, res) => {
 })
 
 router.post('/media', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const { name, type } = req;
+    const { name, type } = req.body;
     const { mediaFile } =  req.files;
     createFile( { name, file : mediaFile, type } )
     .then(response => {
