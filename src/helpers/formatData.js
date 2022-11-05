@@ -1,3 +1,9 @@
+/**
+ * Retorna un objeto los valores de las keys indicadas, solo si estos valores existen
+ * @param {*} object : Objeto base
+ * @param {*} keys : lista de keys
+ * @returns objeto con los valores correspondientes a las keys indicadas
+ */
 const getFormatParameters = (object, keys) => {
     const aux = {};
     if(Array.isArray(keys)){

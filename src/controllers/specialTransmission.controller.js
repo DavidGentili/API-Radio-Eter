@@ -1,5 +1,5 @@
 const SpecialTransmission = require('../models/SpecialTransmission');
-const { checkNewSpecialTransmission, checkUpdateSpecialTransmission } = require('../helpers/checkData');
+const { checkNewSpecialTransmission, checkUpdateSpecialTransmission } = require('../helpers/checkData/checkData');
 const { getFormatParameters, formatObjectResponse } = require('../helpers/formatData');
 
 const updateActiveTransmission = async () => {

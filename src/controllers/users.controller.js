@@ -2,7 +2,7 @@ const User = require('../models/User');
 const { authenticateUser } = require('../helpers/auth');
 const { formatObjectResponse, getFormatParameters } = require('../helpers/formatData');
 const { securityLevels } = require('../helpers/securityLvl')
-const { checkUserData } = require('../helpers/checkData');
+const { checkUserData } = require('../helpers/checkData/checkData');
 const { notifyNewUser, notifyChangePassword } = require('../helpers/sendMail');
 const generator = require('generate-password');
 

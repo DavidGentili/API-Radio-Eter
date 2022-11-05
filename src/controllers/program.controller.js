@@ -1,5 +1,5 @@
 const Program = require('../models/Program');
-const { checkNewProgramData, checkUpdateProgramData } = require('../helpers/checkData')
+const { checkNewProgramData, checkUpdateProgramData } = require('../helpers/checkData/checkData')
 const { getFormatParameters, formatObjectResponse } = require('../helpers/formatData');
 
 //Retorna los programas almacenados en la BD, se puede especificar el Id o si es destacado

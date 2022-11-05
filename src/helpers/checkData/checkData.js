@@ -1,5 +1,13 @@
-const { securityLevels } = require('../helpers/securityLvl');
-const { isArray, isString, isNumber, isBoolean } = require('./checkTypes');
+const { securityLevels } = require('../securityLvl');
+const { isArray, isString, isNumber, isBoolean } = require('../checkTypes');
+
+/**
+ *  retorna si existe una key en el objeto que no corresponda
+ * @param {*} object objeto a comprobar
+ * @param {Array} array array con las keys correspondientes
+ * @returns true si los parametros entran en las keys denominadas
+ */
+const checkParameters = (object, array) => !(Object.keys(object).some(key => array.includes(key)));
 
 const checkNameOrTitle = (name) => (isString(name) && name.length >= 4)
 
@@ -14,8 +22,6 @@ const checkSecurityLevel = (securityLevel) => ( isString(securityLevel) && secur
 const checkId = (id) => (isString(id) && id.length === 24);
 
 const checkTypePublicity = (type) => ( isString(type) && (type.toLowerCase() === 'oficial' || type.toLowerCase() === 'standard') )
-
-const checkMediaContent= (mediaContent) => (isArray(mediaContent) && mediaContent.every(media => isString(media)));
 
 const checkEmail = (email) => {
     const re = /^([\da-zA-Z_\.-]+)@([\da-zA-Z\.-]+)\.([a-zA-Z\.]{2,6})$/;
@@ -104,12 +110,14 @@ const checkNewPublicityData = ({ name, type }) => {
 }
 
 const checkNewReportData = (reportData) => {
-    const { title, description, content, mediaContent, mainImageUrl } = reportData;
+    const { title, description, content, active, mainMediaUrl, creatorId, creatorName } = reportData;
     if(!title || !checkNameOrTitle(title)) return 'Titulo';
-    if(description && !checkNameOrTitle(description)) return 'Descripcion';
+    if(description && !isString(description)) return 'Descripcion';
     if(!content || !isString(content)) return 'Contenido Principal';
-    if(mainImageUrl && !isString(mainImageUrl)) return 'Imagen principal';
-    if(mediaContent && !checkMediaContent(mediaContent)) return 'Contenido multimedia';
+    if(!active || !isBoolean(active)) return 'Activo';
+    if(mainMediaUrl && !isString(mainMediaUrl)) return 'Imagen principal';
+    if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador';
+    if(!creatorName || !checkNameOrTitle(creatorName)) return 'nombre del creador';
 }
 
 
@@ -122,5 +130,9 @@ module.exports = {
     checkUpdateSpecialTransmission,
     checkNewPublicityData,
     checkNewReportData,
+
     checkId,
+    checkTitle : checkNameOrTitle,
+    checkName : checkNameOrTitle,
+    checkParameters,
 }

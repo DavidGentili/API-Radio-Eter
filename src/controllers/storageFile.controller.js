@@ -2,7 +2,7 @@ const StorageFile = require('../models/StorageFile');
 const { formatObjectResponse } = require('../helpers/formatData');
 const { createTmpImageFile, getNewFileName, removeFile } = require('../helpers/storage');
 const { host } = require('../config');
-const { checkId } = require('../helpers/checkData');
+const { checkId } = require('../helpers/checkData/checkData');
 const { getQueryParams } = require('../helpers/formatData');
 
 const corretParameters = (id, urlName) => {
