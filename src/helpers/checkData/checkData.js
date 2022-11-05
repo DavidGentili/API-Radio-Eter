@@ -9,9 +9,9 @@ const { isArray, isString, isNumber, isBoolean } = require('../checkTypes');
  */
 const checkParameters = (object, array) => !(Object.keys(object).some(key => array.includes(key)));
 
-const checkNameOrTitle = (name) => (isString(name) && name.length >= 4)
+const checkName = (name) => (isString(name) && name.length >= 4);
 
-const checkHighlighted = (highlighted) => isBoolean(highlighted);
+const checkTitle = (name) => (isString(name) && name.length >= 4);
 
 const checkCreatorId = (creatorId) => (isString(creatorId) && creatorId.length === 24); 
 
@@ -92,15 +92,13 @@ module.exports = {
     checkUserData,
     checkNewSpecialTransmission,
     checkUpdateSpecialTransmission,
-    checkNewPublicityData,
     checkNewReportData,
 
     checkId,
-    checkTitle : checkNameOrTitle,
-    checkName : checkNameOrTitle,
+    checkTitle,
+    checkName,
     checkParameters,
     checkTime,
     checkDays,
     checkCreatorId,
-    checkHighlighted,
 }

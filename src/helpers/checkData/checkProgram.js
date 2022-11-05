@@ -1,4 +1,4 @@
-const { checkTime, checkName, checkId, checkDays, checkCreatorId, checkHighlighted, checkParameters } = require('./checkData');
+const { checkTime, checkName, checkId, checkDays, checkCreatorId, checkParameters } = require('./checkData');
 const { isString, } = require('../checkTypes');
 
 const programKeys = [ 
@@ -11,6 +11,9 @@ const programKeys = [
     'creatorName',
     'creatorId',
 ]
+
+const checkHighlighted = (highlighted) => isBoolean(highlighted);
+
 
 const checkNewProgramData = (programData) => {
     const {name, startHour, finishHour, highlighted, days, creatorName, creatorId, urlImage} = programData

@@ -1,6 +1,6 @@
 const Program = require('../models/Program');
 const { checkNewProgramData, checkUpdateProgramData } = require('../helpers/checkData/checkProgram')
-const { getFormatParameters, formatObjectResponse } = require('../helpers/formatData');
+const { getFormatParameters } = require('../helpers/formatData');
 const { getElements, getElementById, createElement, updateElement, deleteElement } = require('./element.controller');
 
 
