@@ -27,6 +27,8 @@ const checkTime = (time) => {
     && (Number(minutes) >= 0 && Number(minutes) <= 60)) ? true : false
 }
 
+
+
 module.exports = {
     checkId,
     checkTitle,
@@ -35,4 +37,5 @@ module.exports = {
     checkTime,
     checkDays,
     checkCreatorId,
+    chechNewFileData,
 }
