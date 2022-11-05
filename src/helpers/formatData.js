@@ -1,3 +1,5 @@
+const { isString } = require('./checkTypes');
+
 /**
  * Retorna un objeto los valores de las keys indicadas, solo si estos valores existen
  * @param {*} object : Objeto base
@@ -39,8 +41,16 @@ const formatObjectResponse = (object) => {
     return newObject;
 }
 
+const dataToLowerCase = (userData, keys) => {
+    keys.forEach(key => {
+        if(userData[key] && isString(userData[key]))
+            userData[key] = userData[key].toLowerCase();
+    })
+}
+
 module.exports = { 
     getFormatParameters,
     formatObjectResponse,
     getQueryParams,
+    dataToLowerCase,
 }

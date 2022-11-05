@@ -2,6 +2,42 @@ const { formatObjectResponse, getFormatParameters } = require('../helpers/format
 const { checkId } = require('../helpers/checkData');
 const { default: mongoose } = require('mongoose');
 
+
+/**
+ * retorna un arreglo con los elementos del modelo que cumplan con la query 
+ * pre: el criterio de busqueda debe estar correctamente formateado para evitar undefined o resultados incorrectos
+ * @param {*} query : criterio de busqueda
+ * @param {mongoose.Model} Model : Modelo en el cual buscar
+ * @returns arreglo con los elementos correspondientes al criterio de busqueda
+ */
+ const getElements = async (query, Model) => {
+    try{
+        const elements = await Model.find({query});
+        const formatResponse = Array.isArray(elements) ? elements.map(element => formatObjectResponse(element)) : [formatObjectResponse(elements)];
+        return formatResponse;
+    } catch(e){
+        throw { code : 500, response : { message : 'Error al consultar el elemento'}}
+    }
+
+}
+
+/**
+ * Retorna un elemento dentro del modelo con el id especificado caso contrario excepcion
+ * @param {String} elementId 
+ * @param {mongoose.Model} Model
+ * @return 
+ */
+const getElementById = async (elementId, Model) => {
+    if(!elementId || !checkId(elementId))
+        throw {code: 500, response: { message: 'numero de id incorrecto'}};
+    try{
+     const element = Model.findById(elementId).lean();
+     return formatObjectResponse(element);
+    }catch(e){
+        throw { code : 500, response : { message : 'Error al consultar el elemento'}}
+    }
+}
+
 /**
  * Se encarga de crear el elemento dentro del modelo ingresado
  * @param {*} dataElement : data del nuevo elemento
@@ -58,45 +94,10 @@ const deleteElement = async (elementId, Model) => {
     }
 }
 
-/**
- * retorna un arreglo con los elementos del modelo que cumplan con la query 
- * pre: el criterio de busqueda debe estar correctamente formateado para evitar undefined o resultados incorrectos
- * @param {*} query : criterio de busqueda
- * @param {mongoose.Model} Model : Modelo en el cual buscar
- * @returns arreglo con los elementos correspondientes al criterio de busqueda
- */
-const getElements = async (query, Model) => {
-    try{
-        const elements = await Model.find({query});
-        const formatResponse = Array.isArray(elements) ? elements.map(element => formatObjectResponse(element)) : [formatObjectResponse(elements)];
-        return formatResponse;
-    } catch(e){
-        throw { code : 500, response : { message : 'Error al consultar el elemento'}}
-    }
-
-}
-
-/**
- * Retorna un elemento dentro del modelo con el id especificado caso contrario excepcion
- * @param {String} elementId 
- * @param {mongoose.Model} Model
- * @return 
- */
-const getElementById = async (elementId, Model) => {
-    if(!elementId || !checkId(elementId))
-        throw {code: 500, response: { message: 'numero de id incorrecto'}};
-    try{
-     const element = Model.findById(elementId).lean();
-     return formatObjectResponse(element);
-    }catch(e){
-        throw { code : 500, response : { message : 'Error al consultar el elemento'}}
-    }
-}
-
 module.exports = {
     getElements,
     getElementById,
     createElement,
-    deleteElement,
     updateElement,
+    deleteElement,
 }
