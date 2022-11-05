@@ -1,8 +1,7 @@
 const Publicity = require('../models/Publicity');
-const { getFormatParameters } = require('../helpers/formatData');
 const { checkNewPublicityData, checkUpdatePublicityData } = require('../helpers/checkData/checkPublicity');
+const { getQueryParams, getFormatParameters } = require('../helpers/formatData');
 const { getElements, getElementById, createElement, updateElement, deleteElement } = require('./element.controller');
-
 
 const getAd = async (publicityData) => {
     const queryParams = getQueryParams(publicityData,[ 'name', 'urlImage', 'altText', 'link', 'type',]);

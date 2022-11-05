@@ -34,8 +34,8 @@ const getFilesWithoutData = async ( { id , urlName }) => {
 }
 
 //Se encarga de almacenar un archivo en la BD
-const createFile = async ( { name, file, type } ) => {
-    const urlName = getNewFileName(file, type ? type : 'media');
+const createFile = async ( { name, file, type = 'media'} ) => {
+    const urlName = getNewFileName(file, type);
     if(!file || !file.data)
         throw { code : 500, response : { message : 'Error al crear el archivo'}}
     const { data } = file;

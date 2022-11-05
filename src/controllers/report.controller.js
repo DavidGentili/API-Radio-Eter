@@ -1,6 +1,6 @@
 const Report = require('../models/Report');
-const { getQueryParams, getFormatParameters } = require('../helpers/formatData');
 const { checkNewReportData, checkUpdateReportData } = require('../helpers/checkData/checkReport');
+const { getQueryParams, getFormatParameters } = require('../helpers/formatData');
 const { getElements, getElementById, createElement, updateElement, deleteElement } = require('./element.controller');
 
 
@@ -23,17 +23,6 @@ const createReport = async (reportData) => {
     }catch(e){
         throw { code : 400, response : { message : 'Error al crear el reporte '}};
     }
-
-}
-
-const deleteReport = async(reportId) => {
-    try{
-        await deleteElement(reportId, Report);
-        return { message : 'El reporte se ha eliminado con exito'};
-    }catch(e){
-        throw { code : 400, response : { message : 'Error al eliminar el reporte '}};
-    }
-
 }
 
 const updateReport = async (reportData) => {
@@ -48,14 +37,24 @@ const updateReport = async (reportData) => {
     } catch(e){
         throw { code : 400, response : { message : 'Error al actualizar el reporte '}};
     }
-
 }
+
+const deleteReport = async(reportId) => {
+    try{
+        await deleteElement(reportId, Report);
+        return { message : 'El reporte se ha eliminado con exito'};
+    }catch(e){
+        throw { code : 400, response : { message : 'Error al eliminar el reporte '}};
+    }
+}
+
+
 
 
 module.export = { 
     getReport,
     getReportById,
     createReport,
-    deleteReport,
     updateReport,
+    deleteReport,
 }

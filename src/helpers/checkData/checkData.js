@@ -21,14 +21,11 @@ const checkSecurityLevel = (securityLevel) => ( isString(securityLevel) && secur
 
 const checkId = (id) => (isString(id) && id.length === 24);
 
-
 const checkEmail = (email) => {
     const re = /^([\da-zA-Z_\.-]+)@([\da-zA-Z\.-]+)\.([a-zA-Z\.]{2,6})$/;
     return (isString(email) && re.exec(email));
 }
 
-//Se encarga de comprobar un horario de formato 24hs que tenga como separador los ':' entre las 
-//horas y los minutos
 const checkTime = (time) => {
     if(!time || typeof(time) !== 'string') return false;
     const [hours,minutes] = time.split(':');
@@ -38,40 +35,10 @@ const checkTime = (time) => {
     && (Number(minutes) >= 0 && Number(minutes) <= 60)) ? true : false
 }
     
-
-//Se encargar de comprobar que la informacion para un signup sea correcta en ese caso retorna true
-//caso contrario retorna retornar un string con el nombre del atributo incorrecto para retornar el error
 const checkUserData = ({email, name, securityLevel}) => {
     if(!securityLevel || !checkSecurityLevel(securityLevel)) return 'Nivel de seguridad';
     if(!email || !checkEmail(email)) return 'Mail'
     if(!name || !checkNameOrTitle) return 'Nombre'
-    return true;
-}
-
-const checkTransmissionDate = (startDate, finishDate) => {
-    return (!startDate
-    || !finishDate
-    || typeof(startDate) !== 'object'
-    || typeof(finishDate) !== 'object'
-    || startDate.toString() === 'Invalid Date'
-    || finishDate.toString() === 'Invalid Date'
-    || startDate > finishDate) ? false : true;
-}
-
-const checkNewSpecialTransmission = ({ name, startTransmission, finishTransmission, creatorName, creatorId }) => {
-    if(!name || !checkNameOrTitle(name)) return 'Nombre';
-    if(!checkTransmissionDate(startTransmission, finishTransmission)) return 'fecha de transmision';
-    if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador';
-    if(!creatorName || !isArray(creatorName)) return 'Nombre del creador'
-    return true;
-}
-
-const checkUpdateSpecialTransmission = ({ name, startTransmission, finishTransmission, active, transmissionId }) => {
-    if(name && !checkNameOrTitle(name)) return 'Nombre';
-    if((startTransmission || finishTransmission) && !checkTransmissionDate(startTransmission, finishTransmission)) return 'fecha de transmision';
-    if((startTransmission  || !finishTransmission) && (!startTransmission || finishTransmission) && checkTransmissionDate(startTransmission,finishTransmission))
-    if(active && !isBoolean(active)) return 'activo'
-    if(!transmissionId || !checkId(transmissionId)) return 'Id de transmision';
     return true;
 }
 
