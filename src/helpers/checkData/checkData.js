@@ -21,7 +21,6 @@ const checkSecurityLevel = (securityLevel) => ( isString(securityLevel) && secur
 
 const checkId = (id) => (isString(id) && id.length === 24);
 
-const checkTypePublicity = (type) => ( isString(type) && (type.toLowerCase() === 'oficial' || type.toLowerCase() === 'standard') )
 
 const checkEmail = (email) => {
     const re = /^([\da-zA-Z_\.-]+)@([\da-zA-Z\.-]+)\.([a-zA-Z\.]{2,6})$/;
@@ -49,12 +48,6 @@ const checkUserData = ({email, name, securityLevel}) => {
     return true;
 }
 
-
-
-
-
-
-
 const checkTransmissionDate = (startDate, finishDate) => {
     return (!startDate
     || !finishDate
@@ -79,12 +72,6 @@ const checkUpdateSpecialTransmission = ({ name, startTransmission, finishTransmi
     if((startTransmission  || !finishTransmission) && (!startTransmission || finishTransmission) && checkTransmissionDate(startTransmission,finishTransmission))
     if(active && !isBoolean(active)) return 'activo'
     if(!transmissionId || !checkId(transmissionId)) return 'Id de transmision';
-    return true;
-}
-
-const checkNewPublicityData = ({ name, type }) => {
-    if(!name || !checkNameOrTitle(name)) {return 'Nombre'};
-    if(!type || !checkTypePublicity(type)) return 'Tipo';
     return true;
 }
 

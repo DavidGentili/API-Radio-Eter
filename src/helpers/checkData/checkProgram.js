@@ -14,7 +14,7 @@ const programKeys = [
 
 const checkNewProgramData = (programData) => {
     const {name, startHour, finishHour, highlighted, days, creatorName, creatorId, urlImage} = programData
-    if(!checkParameters(programData, programKeys));
+    if(!checkParameters(programData, programKeys)) return 'parametro';
     if(!name || !checkName(name)) return 'Nombre';
     if(!startHour || !checkTime(startHour)) return 'Hora de inicio';
     if(!finishHour || !checkTime(finishHour)) return 'Hora de finalizacion';

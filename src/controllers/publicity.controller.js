@@ -1,6 +1,6 @@
 const Publicity = require('../models/Publicity');
 const { formatObjectResponse, getFormatParameters } = require('../helpers/formatData');
-const { checkNewPublicityData } = require('../helpers/checkData/checkData');
+const { checkNewPublicityData } = require('../helpers/checkData/checkPublicity');
 
 //Crea un nuevo anuncio, asignando el nombre al archivo, y almacenandolo.
 const createAd = async ( {name, altText, link, type, creatorName, creatorId, urlImage} ) => {
