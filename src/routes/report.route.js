@@ -58,3 +58,4 @@ router.delete('/report', isAuthenticated, correctSecurityLevel, (req, res) => {
     })
 })
 
+module.exports = router

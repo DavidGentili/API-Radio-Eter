@@ -37,5 +37,4 @@ module.exports = {
     checkTime,
     checkDays,
     checkCreatorId,
-    chechNewFileData,
 }

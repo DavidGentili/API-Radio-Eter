@@ -1,5 +1,5 @@
 const { formatObjectResponse, getFormatParameters } = require('../helpers/formatData');
-const { checkId } = require('../helpers/checkData');
+const { checkId } = require('../helpers/checkData/checkData');
 const { default: mongoose } = require('mongoose');
 
 

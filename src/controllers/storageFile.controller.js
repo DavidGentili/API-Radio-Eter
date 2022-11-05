@@ -1,7 +1,7 @@
 const StorageFile = require('../models/StorageFile');
 const { createTmpImageFile, getNewFileName, removeFile } = require('../helpers/storage');
 const { host } = require('../config');
-const { checkNewFileData, checkDeleteFileData } = require('../helpers/checkData/checkData');
+const { checkNewFileData, checkDeleteFileData } = require('../helpers/checkData/checkFile');
 const { getQueryParams } = require('../helpers/formatData');
 const { getElements, getElementById, createElement } = require('./element.controller');
 
