@@ -1,7 +1,7 @@
-const { checkTime, checkName, checkId, checkDays, checkCreatorId, checkHighlighted } = require('./checkData');
+const { checkTime, checkName, checkId, checkDays, checkCreatorId, checkHighlighted, checkParameters } = require('./checkData');
 const { isString, } = require('../checkTypes');
 
-const reportKeys = [ 
+const programKeys = [ 
     'name', 
     'startHour', 
     'finishHour', 
@@ -12,7 +12,9 @@ const reportKeys = [
     'creatorId',
 ]
 
-const checkNewProgramData = ({name, startHour, finishHour, highlighted, days, creatorName, creatorId, urlImage}) => {
+const checkNewProgramData = (programData) => {
+    const {name, startHour, finishHour, highlighted, days, creatorName, creatorId, urlImage} = programData
+    if(!checkParameters(programData, programKeys));
     if(!name || !checkName(name)) return 'Nombre';
     if(!startHour || !checkTime(startHour)) return 'Hora de inicio';
     if(!finishHour || !checkTime(finishHour)) return 'Hora de finalizacion';
