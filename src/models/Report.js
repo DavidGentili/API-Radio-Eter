@@ -9,7 +9,7 @@ const ReportSchema = Schema({
     mainMediaUrl : { type : String },
     creatorId : { type : String, required : true},
     creatorName : { type : String, required : true},
-    lastModify : { type : String, required : true}
-})
+    lastModify : { type : Date, required : true}
+}, { versionKey: false })
 
 module.exports = mongoose.model('Report', ReportSchema);
