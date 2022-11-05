@@ -1,5 +1,5 @@
 const { isString, isBoolean } = require('../checkTypes');
-const { checkTitle, checkParameters } = require('./checkData');
+const { checkTitle, checkParameters, checkCreatorId } = require('./checkData');
 
 const reportKeys = [ 
     'title', 

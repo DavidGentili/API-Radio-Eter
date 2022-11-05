@@ -1,5 +1,5 @@
 const Program = require('../models/Program');
-const { checkNewProgramData, checkUpdateProgramData } = require('../helpers/checkData/checkData')
+const { checkNewProgramData, checkUpdateProgramData } = require('../helpers/checkData/checkProgram')
 const { getFormatParameters, formatObjectResponse } = require('../helpers/formatData');
 
 //Retorna los programas almacenados en la BD, se puede especificar el Id o si es destacado
@@ -16,16 +16,7 @@ const getProgramsByDay = async (day) => {
     return await Program.find(filter).lean();
 }
 
-/*Crea un nuevo programa en la BD, se requiere un objeto que contenga:
-    name,
-    startHour,
-    finishHour,
-    highlighted,
-    days,
-    creatorName,
-    creatorId,
-    urlImage
-*/
+
 const createProgram = async (data) => {
     const check = checkNewProgramData(data);
     if(typeof(check) === 'string')

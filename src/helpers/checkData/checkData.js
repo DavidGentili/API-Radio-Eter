@@ -27,16 +27,6 @@ const checkEmail = (email) => {
     const re = /^([\da-zA-Z_\.-]+)@([\da-zA-Z\.-]+)\.([a-zA-Z\.]{2,6})$/;
     return (isString(email) && re.exec(email));
 }
-    
-
-//Se encargar de comprobar que la informacion para un signup sea correcta en ese caso retorna true
-//caso contrario retorna retornar un string con el nombre del atributo incorrecto para retornar el error
-const checkUserData = ({email, name, securityLevel}) => {
-    if(!securityLevel || !checkSecurityLevel(securityLevel)) return 'Nivel de seguridad';
-    if(!email || !checkEmail(email)) return 'Mail'
-    if(!name || !checkNameOrTitle) return 'Nombre'
-    return true;
-}
 
 //Se encarga de comprobar un horario de formato 24hs que tenga como separador los ':' entre las 
 //horas y los minutos
@@ -48,33 +38,22 @@ const checkTime = (time) => {
   	&&((Number(hours) >= 0 && Number(hours) <= 24) 
     && (Number(minutes) >= 0 && Number(minutes) <= 60)) ? true : false
 }
+    
 
-
-//Se encargar de comprobar la informacion de un programa, constatando su informacion principal definida 
-//en el schema de la base de datos, en caso de que esten correctos los atributos retorna true, 
-//caso constrario retorna el nombre del atributo incorrecto
-const checkNewProgramData = ({name, startHour, finishHour, highlighted, days, creatorName, creatorId, urlImage}) => {
-    if(!name || !checkNameOrTitle(name)) return 'Nombre';
-    if(!startHour || !checkTime(startHour)) return 'Hora de inicio';
-    if(!finishHour || !checkTime(finishHour)) return 'Hora de finalizacion';
-    if(highlighted === undefined || !checkHighlighted(highlighted)) return 'Destacado';
-    if(!days || !checkDays(days)) return 'Dias';
-    if(urlImage && !isString(urlImage)) return 'Url de la imagen';
-    if(!creatorName || !isString(creatorName)) return 'Nombre del creador';
-    if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador';
-    return true; 
-}
-
-const checkUpdateProgramData = ({name, startHour, finishHour, highlighted, days, programId, urlImage}) => {
-    if(name && !checkNameOrTitle(name)) return 'Nombre';
-    if(startHour && !checkTime(startHour)) return 'Hora de inicio';
-    if(finishHour && !checkTime(finishHour)) return 'Hora de finalizacion';
-    if(highlighted !== undefined && !checkHighlighted(highlighted)) return 'Destacado';
-    if(urlImage && !isString(urlImage)) return 'Url de la imagen';
-    if(days && !checkDays(days)) return 'Dias'
-    if(!programId || !checkId(programId)) return 'id';
+//Se encargar de comprobar que la informacion para un signup sea correcta en ese caso retorna true
+//caso contrario retorna retornar un string con el nombre del atributo incorrecto para retornar el error
+const checkUserData = ({email, name, securityLevel}) => {
+    if(!securityLevel || !checkSecurityLevel(securityLevel)) return 'Nivel de seguridad';
+    if(!email || !checkEmail(email)) return 'Mail'
+    if(!name || !checkNameOrTitle) return 'Nombre'
     return true;
 }
+
+
+
+
+
+
 
 const checkTransmissionDate = (startDate, finishDate) => {
     return (!startDate
@@ -124,8 +103,6 @@ const checkNewReportData = (reportData) => {
 
 module.exports = {
     checkUserData,
-    checkNewProgramData,
-    checkUpdateProgramData,
     checkNewSpecialTransmission,
     checkUpdateSpecialTransmission,
     checkNewPublicityData,
@@ -135,4 +112,8 @@ module.exports = {
     checkTitle : checkNameOrTitle,
     checkName : checkNameOrTitle,
     checkParameters,
+    checkTime,
+    checkDays,
+    checkCreatorId,
+    checkHighlighted,
 }
