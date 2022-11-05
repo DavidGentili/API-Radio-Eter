@@ -73,7 +73,7 @@ const updateUser = async (userData) => {
         throw { code : 400, response : { message : `Se ha ingresado un ${check} incorrecto`}}
     try{
         const { userId } = userData;
-        const updateData = getFormatParameters(userData,['name', 'securityLevel', 'state']);
+        const updateData = getFormatParameters(userData, ['securityLevel', 'state']);
         await updateElement(updateData, userId, User);
         return { message : 'El usuario se ha actualizado con exito'};  
     } catch(e){

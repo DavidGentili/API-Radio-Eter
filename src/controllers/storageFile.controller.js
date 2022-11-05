@@ -3,6 +3,7 @@ const { createTmpImageFile, getNewFileName, removeFile } = require('../helpers/s
 const { host } = require('../config');
 const { checkNewFileData, checkDeleteFileData } = require('../helpers/checkData/checkData');
 const { getQueryParams } = require('../helpers/formatData');
+const { getElements, getElementById, createElement } = require('./element.controller');
 
 
 const getFiles = async (fileData) => {

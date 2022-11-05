@@ -1,4 +1,4 @@
-const { checkName, checkParameters } = require('./checkData');
+const { checkName, checkParameters, checkId } = require('./checkData');
 const { isString } = require('../checkTypes');
 const { securityLevels } = require('../securityLvl')
 
@@ -29,11 +29,12 @@ const checkNewUserData = (userData) => {
 }
 
 const checkUpdateUserData = (userData) => {
-    const {email, name} = userData;
+    const {userId, id, email, name, securityLevel} = userData;
     if(securityLevel && !checkSecurityLevel(securityLevel)) return 'Nivel de seguridad';
     if(email && !checkEmail(email)) return 'Mail';
     if(name && !checkName(name)) return 'Nombre';
     if(state && !checkState(state)) return 'Estado';
+    if(!userId || !checkId(userId) || !id || !checkId(id) || checkId === id) return 'Id del usuario' 
     return true;
 }
 
