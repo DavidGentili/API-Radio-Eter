@@ -10,8 +10,8 @@ const getProgramsByDay = async (day) => {
     return await Program.find(filter).lean();
 }
 
-const getProgram = async (programData) => {
-    const queryParams = getFormatParameters({highlighted, id}, ['highlighted', 'id']);
+const getPrograms = async (programData) => {
+    const queryParams = getQueryParams({highlighted, id});
     return await getElements(queryParams, Program);
 }
 
@@ -59,7 +59,7 @@ const deleteProgram = async(programId) => {
 
 
 module.exports = { 
-    getProgram, 
+    getPrograms, 
     getProgramById, 
     createProgram, 
     updateProgram, 

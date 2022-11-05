@@ -3,7 +3,7 @@ const { checkNewPublicityData, checkUpdatePublicityData } = require('../helpers/
 const { getQueryParams, getFormatParameters } = require('../helpers/formatData');
 const { getElements, getElementById, createElement, updateElement, deleteElement } = require('./element.controller');
 
-const getAd = async (publicityData) => {
+const getAds = async (publicityData) => {
     const queryParams = getQueryParams(publicityData,[ 'name', 'urlImage', 'altText', 'link', 'type',]);
     return await getElements(queryParams, Publicity);
 }
@@ -49,7 +49,7 @@ const deleteAd = async(adId) => {
 }
 
 module.exports = { 
-    getAd,
+    getAds,
     getAdById,
     createAd, 
     updateAd, 

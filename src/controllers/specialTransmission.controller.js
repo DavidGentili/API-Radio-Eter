@@ -4,7 +4,7 @@ const { getQueryParams, getFormatParameters } = require('../helpers/formatData')
 const { getElements, getElementById, createElement, updateElement, deleteElement } = require('./element.controller');
 
 const getTransmissions = async (transmissionData) => {
-    const queryParams = getQueryParams(transmissionData, ['active', 'name']);
+    const queryParams = getQueryParams(transmissionData);
     return await getElements(queryParams, SpecialTransmission);
 }
 
@@ -35,7 +35,7 @@ const updateActiveTransmission = async () => {
 }
 
 const updateTransmission = async (transmissionData) => {
-    const check = checkUpdateReportData(transmissionData);
+    const check = checkUpdateSpecialTransmission(transmissionData);
     if(check !== true)
         throw { code : 400, response : { message : `Se ha ingresado un ${check} incorrecto`}}
     try{

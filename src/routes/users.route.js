@@ -9,7 +9,6 @@ router.use('/users',(req, res, next) => {
 })
 
 router.get('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const searchId = (req.query && req.query.id) ? req.query.id : null;
     const { id, name, state, securityLevel, email } = req.query ? req.query : {};
     getUsers({id, name, state, securityLevel, email})
     .then((response) => {

@@ -10,8 +10,8 @@ router.use('/media', (req , res, next) => {
 })
 
 router.get('/media', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const { id, urlName } = req.query;
-    getFilesWithoutData( { id, urlName } )
+    const { id, urlName, name } = req.query;
+    getFilesWithoutData( { id, urlName, name } )
     .then(response => {
         res.status = 200;
         res.json(response);
@@ -22,7 +22,7 @@ router.get('/media', isAuthenticated, correctSecurityLevel, (req, res) => {
 })
 
 router.post('/media', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const { name, type } = req.body;
+    const { name, type = 'Normal' } = req.body;
     const { mediaFile } =  req.files;
     createFile( { name, file : mediaFile, type } )
     .then(response => {
@@ -36,7 +36,7 @@ router.post('/media', isAuthenticated, correctSecurityLevel, (req, res) => {
 
 router.delete('/media', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { mediaId, urlName } = req.body;
-    deleteFile( {mediaId, urlName} )
+    deleteFile( {fileId : mediaId, urlName} )
     .then(response => {
         res.status = 200;
         res.json(response);
