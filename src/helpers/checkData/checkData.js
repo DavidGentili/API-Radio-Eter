@@ -1,12 +1,12 @@
 const { isArray, isString, isNumber, isBoolean } = require('../checkTypes');
 
 /**
- *  retorna si existe una key en el objeto que no corresponda
+ *  retorna si existe una key en el objeto que no este incluida en el array
  * @param {*} object objeto a comprobar
  * @param {Array} array array con las keys correspondientes
  * @returns true si los parametros entran en las keys denominadas
  */
-const checkParameters = (object, array) => !(Object.keys(object).some(key => array.includes(key)));
+const checkParameters = (object, array) => !(Object.keys(object).some(key => !array.includes(key)));
 
 const checkName = (name) => (isString(name) && name.length >= 4);
 

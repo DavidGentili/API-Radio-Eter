@@ -12,7 +12,7 @@ const { default: mongoose } = require('mongoose');
  */
  const getElements = async (query, Model) => {
     try{
-        const elements = await Model.find({query});
+        const elements = await Model.find({query}).lean();
         const formatResponse = Array.isArray(elements) ? elements.map(element => formatObjectResponse(element)) : [formatObjectResponse(elements)];
         return formatResponse;
     } catch(e){
@@ -46,11 +46,12 @@ const getElementById = async (elementId, Model) => {
  */
 const createElement = async ( dataElement, Model ) => {
     try{
-        const newElement = new Model({dataElement});
+        const newElement = new Model(dataElement);
         await newElement.save();
         return { message : 'el elemento se ha creado exitosamente'};
 
     } catch(e){
+        console.log(e);
         throw { code : 500, response : { message : 'Error al crear el elemento'}}
     }
 }

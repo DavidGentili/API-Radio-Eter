@@ -19,7 +19,7 @@ const userKeys = [
 ]
 
 const checkNewUserData = (userData) => {
-    const {email, name} = userData;
+    const {email, name, securityLevel, state} = userData;
     if(!checkParameters(userData, userKeys)) return 'Parametros';
     if(!securityLevel || !checkSecurityLevel(securityLevel)) return 'Nivel de seguridad';
     if(!email || !checkEmail(email)) return 'Mail';
@@ -29,7 +29,7 @@ const checkNewUserData = (userData) => {
 }
 
 const checkUpdateUserData = (userData) => {
-    const {userId, id, email, name, securityLevel} = userData;
+    const {userId, id, email, name, securityLevel, state} = userData;
     if(securityLevel && !checkSecurityLevel(securityLevel)) return 'Nivel de seguridad';
     if(email && !checkEmail(email)) return 'Mail';
     if(name && !checkName(name)) return 'Nombre';
@@ -38,7 +38,7 @@ const checkUpdateUserData = (userData) => {
     return true;
 }
 
-module.export = {
+module.exports = {
     checkNewUserData,
     checkUpdateUserData
 }
