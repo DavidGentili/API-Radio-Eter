@@ -3,6 +3,7 @@ const { getQueryParams, getFormatParameters } = require('../helpers/formatData')
 const { checkNewReportData, checkUpdateReportData } = require('../helpers/checkData/checkReport');
 const { getElements, getElementById, createElement, updateElement, deleteElement } = require('./element.controller');
 
+
 const getReport = async (reportData) => {
     const queryParams = getQueryParams(reportData, ['id','title', 'active','creatorId','creatorName']);
     return await getElements(queryParams, Report);
@@ -43,6 +44,7 @@ const updateReport = async (reportData) => {
         const { reportId } = reportData;
         const updateData = getFormatParameters(reportData, ['title', 'description', 'content', 'active', 'mainMediaUrl']);
         await updateElement(updateData, reportId, Report);
+        return { message : 'El reporte se ha actualizado con exito'};  
     } catch(e){
         throw { code : 400, response : { message : 'Error al actualizar el reporte '}};
     }
