@@ -2,7 +2,7 @@ const StorageFile = require('../models/StorageFile');
 const { createTmpImageFile, getNewFileName, removeFile } = require('../helpers/storage');
 const { host } = require('../config');
 const { checkNewFileData, checkDeleteFileData } = require('../helpers/checkData/checkFile');
-const { getQueryParams } = require('../helpers/formatData');
+const { getQueryParams, getFormatParameters } = require('../helpers/formatData');
 const { getElements, getElementById, createElement } = require('./element.controller');
 
 
@@ -20,13 +20,12 @@ const getFilesById = async (fileId) => {
 //Retorna todos los archivos guardados en la BD sin la data, pero con el link de acceso
 const getFilesWithoutData = async ( fileData ) => {
     const files = await getFiles(fileData);
-    const responseFiles =  files.map(file => {
-        const { id, name, urlName } = file;
+    const responseFiles =  files.map(({ id, name, urlName }) => {
         return {
             id,
             name,
             urlName,
-            url : `${host}/public/${file.urlName}`,
+            url : `${host}/public/${urlName}`,
         }
     });
     return responseFiles
@@ -52,14 +51,14 @@ const createFile = async ( fileData ) => {
 const deleteFile = async ( { fileId, urlName} ) => {
     if(!checkDeleteFileData(fileId, urlName))
         throw { code: 500, response: { message : 'Parametros incorrectos'}};
-    let currentFile = await getFiles( { id: fileId, urlName });
+    let currentFile =  ( fileId ) ? await getFilesWithoutData({ _id : fileId}) : await getFilesWithoutData({ urlName });
     currentFile = (currentFile && Array.isArray(currentFile) ? currentFile[0] : currentFile);
     if(!currentFile)
         throw { code: 500, response: { message : 'Error al eliminar el archivo'}};
     urlName = currentFile.urlName;
     fileId = currentFile.id;
     await StorageFile.findByIdAndDelete(fileId);
-    removeFile(urlName);
+    removeFile(urlName); 
     return { message: 'Archivo eliminado con exito' };
 }
 

@@ -1,5 +1,5 @@
 const { checkTime, checkName, checkId, checkDays, checkCreatorId, checkParameters } = require('./checkData');
-const { isString, } = require('../checkTypes');
+const { isString, isBoolean } = require('../checkTypes');
 
 const programKeys = [ 
     'name', 

@@ -13,7 +13,7 @@ router.get('/programgrid', (req, res) => {
 router.get('/currentprogram', (req, res) => {
     getCurrentProgram()
     .then(response => res.json(response))
-    .catch(e => responseCodeError(e));
+    .catch(e => responseCodeError(e, res));
 })
 
 

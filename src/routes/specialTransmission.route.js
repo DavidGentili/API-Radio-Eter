@@ -18,7 +18,7 @@ router.get('/specialtransmission', isAuthenticated, correctSecurityLevel, async 
         res.status = 200;
         res.json(response);
     })
-    .catch(e => responseCodeError(e));
+    .catch(e => responseCodeError(e, res));
 
 })
 
@@ -35,10 +35,8 @@ router.post('/specialtransmission', isAuthenticated, correctSecurityLevel, (req,
         res.status = 200;
         res.json(response);
     })
-    .catch(e => responseCodeError(e));
+    .catch(e => responseCodeError(e, res));
 })
-
-
 
 router.put('/specialtransmission', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { name, startTransmission, finishTransmission, active, transmissionId } = req.body;

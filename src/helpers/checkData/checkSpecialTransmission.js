@@ -1,5 +1,5 @@
 const { checkCreatorId, checkName, checkId } = require('./checkData');
-const { isArray, isBoolean } = require('../checkTypes');
+const { isBoolean, isString } = require('../checkTypes');
 
 
 const transmissionKeys = [ 
@@ -24,7 +24,7 @@ const checkNewSpecialTransmission = ({ name, startTransmission, finishTransmissi
     if(!name || !checkName(name)) return 'Nombre';
     if(!checkTransmissionDate(startTransmission, finishTransmission)) return 'fecha de transmision';
     if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador';
-    if(!creatorName || !isArray(creatorName)) return 'Nombre del creador'
+    if(!creatorName || !isString(creatorName)) return 'Nombre del creador'
     return true;
 }
 

@@ -11,7 +11,7 @@ const getProgramsByDay = async (day) => {
 }
 
 const getPrograms = async (programData) => {
-    const queryParams = getQueryParams({highlighted, id});
+    const queryParams = getQueryParams(programData);
     return await getElements(queryParams, Program);
 }
 

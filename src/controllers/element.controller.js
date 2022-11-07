@@ -12,7 +12,7 @@ const { default: mongoose } = require('mongoose');
  */
  const getElements = async (query, Model) => {
     try{
-        const elements = await Model.find({query}).lean();
+        const elements = await Model.find(query).lean();
         const formatResponse = Array.isArray(elements) ? elements.map(element => formatObjectResponse(element)) : [formatObjectResponse(elements)];
         return formatResponse;
     } catch(e){
