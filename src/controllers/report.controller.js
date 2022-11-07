@@ -14,6 +14,7 @@ const getReportById = async (reportId) => {
 }
 
 const createReport = async (reportData) => {
+    reportData.lastModify = new Date(Date.now());
     const check = checkNewReportData(reportData);
     if(check !== true)
         throw { code : 400, response : { message : `Se ha ingresado un ${check} incorrecto`}}
@@ -26,12 +27,13 @@ const createReport = async (reportData) => {
 }
 
 const updateReport = async (reportData) => {
+    reportData.lastModify = new Date(Date.now());
     const check = checkUpdateReportData(reportData);
     if(check !== true)
         throw { code : 400, response : { message : `Se ha ingresado un ${check} incorrecto`}}
     try{
         const { reportId } = reportData;
-        const updateData = getFormatParameters(reportData, ['title', 'description', 'content', 'active', 'mainMediaUrl']);
+        const updateData = getFormatParameters(reportData, ['title', 'description', 'content', 'active', 'mainMediaUrl', 'lastModify']);
         await updateElement(updateData, reportId, Report);
         return { message : 'El reporte se ha actualizado con exito'};  
     } catch(e){
@@ -51,7 +53,7 @@ const deleteReport = async(reportId) => {
 
 
 
-module.export = { 
+module.exports = { 
     getReport,
     getReportById,
     createReport,

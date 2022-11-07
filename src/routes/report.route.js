@@ -26,7 +26,7 @@ router.post('/report', isAuthenticated, correctSecurityLevel, (req, res) => {
     const creatorId = req.user.id;
     const creatorName = req.user.name;
     const reportData = { title, description, content, active, mainMediaUrl, creatorId, creatorName}
-    createReport()
+    createReport(reportData)
     .then(response => {
         res.status = 200;
         res.json(response);
