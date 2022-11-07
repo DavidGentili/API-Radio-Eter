@@ -29,7 +29,7 @@ const checkNewSpecialTransmission = ({ name, startTransmission, finishTransmissi
 }
 
 const checkUpdateSpecialTransmission = ({ name, startTransmission, finishTransmission, active, transmissionId }) => {
-    if(name && !checkNameOrTitle(name)) return 'Nombre';
+    if(name && !checkName(name)) return 'Nombre';
     if((startTransmission || finishTransmission) && !checkTransmissionDate(startTransmission, finishTransmission)) return 'fecha de transmision';
     if((startTransmission  || !finishTransmission) && (!startTransmission || finishTransmission) && checkTransmissionDate(startTransmission,finishTransmission))
     if(active && !isBoolean(active)) return 'activo'

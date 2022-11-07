@@ -1,4 +1,4 @@
-const { formatObjectResponse, getFormatParameters } = require('../helpers/formatData');
+const { formatObjectResponse } = require('../helpers/formatData');
 const { checkId } = require('../helpers/checkData/checkData');
 const { default: mongoose } = require('mongoose');
 
@@ -51,7 +51,6 @@ const createElement = async ( dataElement, Model ) => {
         return { message : 'el elemento se ha creado exitosamente'};
 
     } catch(e){
-        console.log(e);
         throw { code : 500, response : { message : 'Error al crear el elemento'}}
     }
 }

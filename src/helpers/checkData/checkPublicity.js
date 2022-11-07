@@ -1,5 +1,5 @@
 const { checkName, checkParameters } = require('./checkData');
-const { isArray } = require('../checkTypes');
+const { isString } = require('../checkTypes');
 
 const publicityKeys = [ 
     'name', 
@@ -19,21 +19,21 @@ const checkTypePublicity = (type) => ( isString(type) && (type.toLowerCase() ===
 const checkNewPublicityData = (publicityData) => {
     const { name, type, urlImage, altText, link, } = publicityData;
     if(!checkParameters(publicityData, publicityKeys)) return 'parametro';
-    if(!name || !checkNameOrTitle(name)) {return 'Nombre'};
+    if(!name || !checkName(name)) {return 'Nombre'};
     if(!type || !checkTypePublicity(type)) return 'Tipo';
-    if(urlImage && !isArray(urlImage)) return 'Url de la imagen';
-    if(link && !isArray(link)) return 'Link';
-    if(altText && !isArray(altText)) return 'texto alternativo '
+    if(urlImage && !isString(urlImage)) return 'Url de la imagen';
+    if(link && !isString(link)) return 'Link';
+    if(altText && !isString(altText)) return 'texto alternativo '
     return true;
 }
 
 const checkUpdatePublicityData = (publicityData) => {
     const { name, type, urlImage, altText, link, } = publicityData;
-    if(name && !checkNameOrTitle(name)) {return 'Nombre'};
+    if(name && !checkName(name)) {return 'Nombre'};
     if(type && !checkTypePublicity(type)) return 'Tipo';
-    if(urlImage && !isArray(urlImage)) return 'Url de la imagen';
-    if(link && !isArray(link)) return 'Link';
-    if(altText && !isArray(altText)) return 'texto alternativo '
+    if(urlImage && !isString(urlImage)) return 'Url de la imagen';
+    if(link && !isString(link)) return 'Link';
+    if(altText && !isString(altText)) return 'texto alternativo '
     return true;
 }
 
