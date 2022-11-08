@@ -8,10 +8,21 @@ router.use('/users',(req, res, next) => {
     next();
 })
 
+router.get('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
+    const { id, name, state, securityLevel, email } = req.query ? req.query : {};
+    getUsers({id, name, state, securityLevel, email})
+    .then((response) => {
+        res.status = 200;
+        res.json(response);
+    })
+    .catch((e) => {
+        responseCodeError(e, res)
+    })
+})
 
 router.post('/users/signup', isAuthenticated, correctSecurityLevel, (req,res) => {
-    const { name, email, securityLevel } = req.body
-    signupUser({ name, email, securityLevel })
+    const { name, email, securityLevel = 'editor' } = req.body
+    signupUser({ name, email, securityLevel, state : 'active' })
     .then((response) => {
         res.status = 200;
         res.json(response)
@@ -50,7 +61,7 @@ router.put('/users/password', isAuthenticated, (req,res) => {
 router.put('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { idUser, securityLevel, state } = req.body;
     const { id } = req.user;
-    updateUser({ idUser, id, securityLevel, state })
+    updateUser({ userId : idUser , id, securityLevel, state })
     .then((response) => {
         res.status = 200;
         res.json(response);
@@ -59,18 +70,6 @@ router.put('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
         responseCodeError(e, res)
     })
 
-})
-
-router.get('/users', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const searchId = (req.query && req.query.id) ? req.query.id : null;
-    getUsers(searchId)
-    .then((response) => {
-        res.status = 200;
-        res.json(response);
-    })
-    .catch((e) => {
-        responseCodeError(e, res)
-    })
 })
 
 router.delete('/users', isAuthenticated, correctSecurityLevel, (req,res) => {

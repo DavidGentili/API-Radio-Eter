@@ -22,6 +22,7 @@ app.use(require('./routes/program.route'));
 app.use(require('./routes/specialTransmission.route'));
 app.use(require('./routes/programGrid.route'));
 app.use(require('./routes/media.route'));
+app.use(require('./routes/report.route'));
 
 
 app.set('port', port || 9000)

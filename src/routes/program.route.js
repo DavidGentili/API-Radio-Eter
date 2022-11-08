@@ -9,6 +9,18 @@ router.use('/programs', (req , res, next) => {
     next();
 })
 
+router.get('/programs', async (req,res) => {
+    const { highlighted, id } = req.query;
+    getPrograms({highlighted, id})
+    .then(response => {
+        res.status = 200;
+        res.json(response);
+    })
+    .catch(e => {
+        responseCodeError(e, res);
+    })
+})
+
 router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     const creatorId = req.user.id;
     const creatorName = req.user.name;
@@ -22,17 +34,7 @@ router.post('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     })
 })
 
-router.get('/programs', async (req,res) => {
-    const { highlighted, id } = req.query;
-    getPrograms(highlighted, id)
-    .then(response => {
-        res.status = 200;
-        res.json(response);
-    })
-    .catch(e => {
-        responseCodeError(e, res);
-    })
-})
+
 
 router.put('/programs', isAuthenticated, correctSecurityLevel, (req, res) => {
     updateProgram({ ...req.body})

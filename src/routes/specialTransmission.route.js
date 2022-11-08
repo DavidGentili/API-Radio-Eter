@@ -8,7 +8,19 @@ router.use('/specialtransmission', (req , res, next) => {
     next();
 })
 
+router.get('/specialtransmission', isAuthenticated, correctSecurityLevel, async (req, res) => {
+    const params = {
+        name : req.query.name,
+        active : (req.query.active) ? (req.query.active === 'true' ? true : false) : undefined
+    }
+    getTransmissions(params)
+    .then(response => {
+        res.status = 200;
+        res.json(response);
+    })
+    .catch(e => responseCodeError(e, res));
 
+})
 
 router.post('/specialtransmission', isAuthenticated, correctSecurityLevel, (req, res) => {
     const data = {
@@ -23,21 +35,7 @@ router.post('/specialtransmission', isAuthenticated, correctSecurityLevel, (req,
         res.status = 200;
         res.json(response);
     })
-    .catch(e => responseCodeError(e));
-})
-
-router.get('/specialtransmission', isAuthenticated, correctSecurityLevel, async (req, res) => {
-    const params = {
-        name : req.query.name,
-        active : (req.query.active) ? (req.query.active === 'true' ? true : false) : undefined
-    }
-    getTransmissions(params)
-    .then(response => {
-        res.status = 200;
-        res.json(response);
-    })
-    .catch(e => responseCodeError(e));
-
+    .catch(e => responseCodeError(e, res));
 })
 
 router.put('/specialtransmission', isAuthenticated, correctSecurityLevel, (req, res) => {

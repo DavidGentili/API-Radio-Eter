@@ -8,6 +8,17 @@ router.use('/ad', (req , res, next) => {
     next();
 })
 
+router.get('/ad', (req, res) => {
+    const { name, urlImage, altText, link, type } = req.query;
+    getAds({ name, urlImage, altText, link, type })
+    .then(response => {
+        res.status = 200;
+        res.json(response);
+    })
+    .catch(e => {
+        responseCodeError(e, res)
+    })
+})
 
 router.post('/ad', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { name, altText, link, type, urlImage} = req.body;
@@ -23,17 +34,7 @@ router.post('/ad', isAuthenticated, correctSecurityLevel, (req, res) => {
     })
 })
 
-router.get('/ad', (req, res) => {
-    const { type } = req.query;
-    getAds(type)
-    .then(response => {
-        res.status = 200;
-        res.json(response);
-    })
-    .catch(e => {
-        responseCodeError(e, res)
-    })
-})
+
 
 router.put('/ad', isAuthenticated, correctSecurityLevel, (req, res) => {
     updateAd(req.body)

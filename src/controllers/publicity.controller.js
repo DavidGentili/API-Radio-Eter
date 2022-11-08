@@ -1,44 +1,57 @@
 const Publicity = require('../models/Publicity');
-const { formatObjectResponse, getFormatParameters } = require('../helpers/formatData');
-const { checkNewPublicityData } = require('../helpers/checkData');
+const { checkNewPublicityData, checkUpdatePublicityData } = require('../helpers/checkData/checkPublicity');
+const { getQueryParams, getFormatParameters } = require('../helpers/formatData');
+const { getElements, getElementById, createElement, updateElement, deleteElement } = require('./element.controller');
 
-//Crea un nuevo anuncio, asignando el nombre al archivo, y almacenandolo.
-const createAd = async ( {name, altText, link, type, creatorName, creatorId, urlImage} ) => {
-    const check = checkNewPublicityData({ name, type });
+const getAds = async (publicityData) => {
+    const queryParams = getQueryParams(publicityData,[ 'name', 'urlImage', 'altText', 'link', 'type',]);
+    return await getElements(queryParams, Publicity);
+}
+
+const getAdById = async (adId) => {
+    return await getElementById(adId, Publicity);
+}
+
+const createAd = async (adData) => {
+    const check = checkNewPublicityData(adData);
     if(check !== true)
-        throw {code: 400, response: {message: `Se ha ingresado un ${check} incorrecto`}};
-    const newAd = new Publicity({ name, altText, creatorName, creatorId, link, type, urlImage })
-    await newAd.save();
-    return { message : 'La publicidad ha sido creada exitosamente'}
+        throw { code : 400, response : { message : `Se ha ingresado un ${check} incorrecto`}}
+    try{
+        await createElement(adData, Publicity);
+        return { message : 'El aviso ha sido creado con exito'}
+    }catch(e){
+        throw { code : 400, response : { message : 'Error al crear el aviso '}};
+    }
 }
 
-//Se encarga de actualizar la data de un anuncio, lo unico que no se puede modificar es la imagen, debido a que se entiende que cada imagen
-//es un anuncio distinto.
-const updateAd = async (data) => {
-    const { name, altText, link, type, adId, urlImage } = data;
-    if(!adId || adId.length !== 24 )
-        throw {code: 400, response: { message: 'Parametros incorrectos'}};
-    const formatAttributes = getFormatParameters({name, altText, link, type, urlImage }, [ 'name', 'altText', 'link', 'type', 'urlImage' ]);
-    await Publicity.findByIdAndUpdate(adId, formatAttributes);
-    return { message: 'El aviso fue actualizado exitosamente' }
+const updateAd = async (adData) => {
+    const check = checkUpdatePublicityData(adData);
+    if(check !== true)
+        throw { code : 400, response : { message : `Se ha ingresado un ${check} incorrecto`}}
+    try{
+        const { adId } = adData;
+        const updateData = getFormatParameters(adData, [ 'name', 'urlImage', 'altText', 'link', 'type',]);
+        await updateElement(updateData, adId, Publicity);
+        return { message : 'El anuncio se ha actualizado con exito'};  
+    } catch(e){
+        throw { code : 400, response : { message : 'Error al actualizar el anuncio '}};
+    }
 }
 
-//Se encarga de eliminar el anuncio especificado con el Id
-const deleteAd = async (adId) => {
-    if(!adId || adId.length !== 24)
-        throw {code: 400, response: { message: 'Parametros incorrectos'}};
-    const ad = await Publicity.findById(adId).lean();
-    if(!ad)
-        throw {code: 400, response: { message: 'Parametros incorrectos'}};
-    await Publicity.findByIdAndDelete(adId);
-    return { message: 'El aviso fue removido con exito'}
+const deleteAd = async(adId) => {
+    try{
+        await deleteElement(adId, Publicity);
+        return { message : 'El anuncio se ha eliminado con exito'};
+    }catch(e){
+        throw { code : 400, response : { message : 'Error al eliminar el anuncio '}};
+    }
+
 }
 
-//Se encarga de obtener los anuncios de la BD, se puede especificar tipo.
-const getAds = async (type) => {
-    const ads = await (type ? Publicity.find({type}).lean() : Publicity.find().lean());
-    const formatResponse = Array.isArray(ads) ? ads.map(ad => formatObjectResponse(ad)) : [formatObjectResponse(ads)];
-    return formatResponse;
-}
-
-module.exports = { createAd, updateAd, deleteAd, getAds }
+module.exports = { 
+    getAds,
+    getAdById,
+    createAd, 
+    updateAd, 
+    deleteAd, 
+ }

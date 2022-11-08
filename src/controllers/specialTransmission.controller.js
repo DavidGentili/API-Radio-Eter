@@ -1,6 +1,29 @@
 const SpecialTransmission = require('../models/SpecialTransmission');
-const { checkNewSpecialTransmission, checkUpdateSpecialTransmission } = require('../helpers/checkData');
-const { getFormatParameters, formatObjectResponse } = require('../helpers/formatData');
+const { checkNewSpecialTransmission, checkUpdateSpecialTransmission } = require('../helpers/checkData/checkSpecialTransmission');
+const { getQueryParams, getFormatParameters } = require('../helpers/formatData');
+const { getElements, getElementById, createElement, updateElement, deleteElement } = require('./element.controller');
+
+const getTransmissions = async (transmissionData) => {
+    const queryParams = getQueryParams(transmissionData);
+    return await getElements(queryParams, SpecialTransmission);
+}
+
+const getTransmissionsById = async (transmissionId) => {
+    return await getElementById(transmissionId, SpecialTransmission);
+} 
+
+const createSpecialTransmission = async (transmissionData) => {
+    const check = checkNewSpecialTransmission(transmissionData);
+    if(check !== true)
+        throw { code : 400, response : { message : `Se ha ingresado un ${check} incorrecto`}}
+    try{
+        await createElement(transmissionData, SpecialTransmission);
+        updateActiveTransmission()
+        return { message : 'La transmision ha sido creada con exito'}
+    }catch(e){
+        throw { code : 400, response : { message : 'Error al crear la transmision especial '}};
+    }
+}
 
 const updateActiveTransmission = async () => {
     const now = new Date(Date.now());
@@ -11,43 +34,33 @@ const updateActiveTransmission = async () => {
     })
 }
 
-const updateTransmission = async (data) => {
-    const { transmissionId } = data; 
-    const check = checkUpdateSpecialTransmission(data);
-    if(typeof(check) === 'string')
-        throw { status: 400 , response: { message : `Se ha ingresado un ${check} incorrecto`}};
-    const { name, startTransmission, finishTransmission, active } = data;
-    await SpecialTransmission.findByIdAndUpdate(transmissionId, { name, startTransmission, finishTransmission, active });
-    await updateActiveTransmission();
-    return { message: 'La transmision fue actualizada con exito' };
+const updateTransmission = async (transmissionData) => {
+    const check = checkUpdateSpecialTransmission(transmissionData);
+    if(check !== true)
+        throw { code : 400, response : { message : `Se ha ingresado un ${check} incorrecto`}}
+    try{
+        const { transmissionId } = transmissionData;
+        const updateData = getFormatParameters(transmissionData, ['name', 'startTransmission', 'finishTransmission', 'active',]);
+        await updateElement(updateData, transmissionId, SpecialTransmission);
+        updateActiveTransmission()
+        return { message : 'La transmision se ha actualizado con exito'};  
+    } catch(e){
+        throw { code : 400, response : { message : 'Error al actualizar la transmision '}};
+    }
 }
 
-const createSpecialTransmission = async (data) => {
-    const check = checkNewSpecialTransmission(data);
-    if(typeof(check) === 'string')
-        throw { status: 400 , response: { message : `Se ha ingresado un ${check} incorrecto`}};
-    await updateActiveTransmission();
-    const newTransmission = await new SpecialTransmission(data);
-    await newTransmission.save();
-    return { message: 'La transmision fue creada con exito' };
+const deleteTransmission = async(transmissionId) => {
+    try{
+        await deleteElement(transmissionId, SpecialTransmission);
+        return { message : 'La transmision se ha eliminado con exito'};
+    }catch(e){
+        throw { code : 400, response : { message : 'Error al eliminar la transmision '}};
+    }
 }
 
-const getTransmissions = async (params) => {
-    const parameters = getFormatParameters(params, ['active', 'name']);
-    const transmissions = await SpecialTransmission.find(parameters).lean();
-    const formatTransmission = Array.isArray(transmissions) ? transmissions.map(transmission => formatObjectResponse(transmission)) : [formatObjectResponse(transmissions)];
-    return formatTransmission;
+module.exports = { 
+    getTransmissions, 
+    createSpecialTransmission, 
+    updateTransmission,
+    deleteTransmission
 }
-
-const deleteTransmission = async (transmissionId) => {
-    if(typeof(transmissionId) !== 'string' || transmissionId.length !== 24)
-        throw { code: 400, response: { message: 'Id de transmision incorrecto' }};
-    const currentTransmission = await SpecialTransmission.findById(transmissionId);
-    if(!currentTransmission)
-        throw { code: 400, response: { message: 'Id de transmision incorrecto' }};
-    await SpecialTransmission.findByIdAndDelete(transmissionId);
-    await updateActiveTransmission();
-    return { message: 'La transmision ha sido eliminado con exito' }
-}
-
-module.exports = { createSpecialTransmission, updateTransmission, getTransmissions, deleteTransmission}

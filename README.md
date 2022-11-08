@@ -227,10 +227,36 @@
     title: String, required
     description: String
     content : String, required
-    mediaContent : [String]
+    active: Boolean, required default false
     mainImageUrl : String
     creatorName: String, required
     creatorId: String, required
     createdAt : Date, required
     lastModify : Date, required
 
+###### get report
+    path: /report
+    method: get
+    query: id, title, active, creatorId, creatorName
+    return: 200 - [reports] || 4-- errorMessage
+
+###### create report
+    path: /report
+    method: post
+    headers: authorization
+    body: title, description, content, active, mainMediaUrl
+    return: 200 - {message} || 4-- errorMessage
+
+###### update report
+    path: /report
+    method: put
+    headers: authorization
+    body: title, description, content, active, mainMediaUrl
+    return: 200 - {message} || 4-- errorMessage
+
+###### delete report
+    path: /report
+    method: delete
+    headers: authorization
+    body: reportid
+    return: 200 - {message} || 4-- errorMessage
