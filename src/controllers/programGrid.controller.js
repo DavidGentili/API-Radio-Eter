@@ -6,7 +6,7 @@ const { getPrograms, getProgramsByDay } = require('./program.controller');
 //retorna una grilla completa de programas
 const getFullGrid = async () => {
     const grid = new Array(7).fill(new Array);
-    const queryPrograms = await getPrograms();
+    const queryPrograms = await getPrograms({});
     const programs = (Array.isArray(queryPrograms)) ? queryPrograms.map(program => formatObjectResponse(program)) : [formatObjectResponse(queryPrograms)];
     grid.forEach((day, index, array) => {
         const programsOfTheDay = programs.filter(program => program.days[index])
