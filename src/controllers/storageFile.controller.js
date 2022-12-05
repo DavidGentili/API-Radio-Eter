@@ -20,12 +20,13 @@ const getFilesById = async (fileId) => {
 //Retorna todos los archivos guardados en la BD sin la data, pero con el link de acceso
 const getFilesWithoutData = async ( fileData ) => {
     const files = await getFiles(fileData);
-    const responseFiles =  files.map(({ id, name, urlName }) => {
+    const responseFiles =  files.map(({ id, name, urlName, createdAt }) => {
         return {
             id,
             name,
             urlName,
             url : `${host}/public/${urlName}`,
+            createdAt,
         }
     });
     return responseFiles
