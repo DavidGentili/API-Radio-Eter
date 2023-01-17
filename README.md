@@ -1,5 +1,8 @@
 # API Radio ETER MDP
 
+### TODO
+    Agregar e integrar Timestamps a los modelos restantes
+
 ### Endpoints
 #### Users
 

@@ -18,7 +18,7 @@ const checkNewReportData = (reportData) => {
     if(!title || !checkTitle(title)) return 'Titulo';
     if(description && !isString(description)) return 'Descripcion';
     if(!content || !isString(content)) return 'Contenido Principal';
-    if(!active || !isBoolean(active)) return 'Activo';
+    if(active === undefined || !isBoolean(active)) return 'Activo';
     if(mainMediaUrl && !isString(mainMediaUrl)) return 'Imagen principal';
     if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador';
     if(!creatorName || !checkName(creatorName)) return 'nombre del creador';
