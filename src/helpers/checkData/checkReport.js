@@ -1,10 +1,13 @@
 const { isString, isBoolean, isDate } = require('../checkTypes');
 const { checkTitle, checkParameters, checkCreatorId, checkName } = require('./checkData');
 
+const checkTags = (tags) => (Array.isArray(tags) && tags.every(tag => isString(tag)));
+
 const reportKeys = [ 
     'title', 
     'description', 
-    'content', 
+    'content',
+    'tags', 
     'active',
     'mainMediaUrl',
     'creatorId',
@@ -13,11 +16,12 @@ const reportKeys = [
 ]
 
 const checkNewReportData = (reportData) => {
-    const { title, description, content, active, mainMediaUrl, creatorId, creatorName, lastModify } = reportData;
+    const { title, description, content, active, mainMediaUrl, creatorId, creatorName, lastModify, tags } = reportData;
     if(!checkParameters(reportData, reportKeys)) return 'parametro';
     if(!title || !checkTitle(title)) return 'Titulo';
     if(description && !isString(description)) return 'Descripcion';
     if(!content || !isString(content)) return 'Contenido Principal';
+    if(tags && !checkTags(tags)) return 'Tags';
     if(active === undefined || !isBoolean(active)) return 'Activo';
     if(mainMediaUrl && !isString(mainMediaUrl)) return 'Imagen principal';
     if(!creatorId || !checkCreatorId(creatorId)) return 'Id del creador';

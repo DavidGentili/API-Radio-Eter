@@ -5,7 +5,7 @@ const { getElements, getElementById, createElement, updateElement, deleteElement
 
 
 const getReport = async (reportData) => {
-    const queryParams = getQueryParams(reportData, ['id','title', 'active','creatorId','creatorName']);
+    const queryParams = getQueryParams(reportData, ['id','title', 'active','creatorId','creatorName', 'tags']);
     return await getElements(queryParams, Report);
 }
 
@@ -33,7 +33,7 @@ const updateReport = async (reportData) => {
         throw { code : 400, response : { message : `Se ha ingresado un ${check} incorrecto`}}
     try{
         const { reportId } = reportData;
-        const updateData = getFormatParameters(reportData, ['title', 'description', 'content', 'active', 'mainMediaUrl', 'lastModify']);
+        const updateData = getFormatParameters(reportData, ['title', 'description', 'content', 'active', 'mainMediaUrl', 'lastModify', 'tags']);
         await updateElement(updateData, reportId, Report);
         return { message : 'El reporte se ha actualizado con exito'};  
     } catch(e){
@@ -49,9 +49,6 @@ const deleteReport = async(reportId) => {
         throw { code : 400, response : { message : 'Error al eliminar el reporte '}};
     }
 }
-
-
-
 
 module.exports = { 
     getReport,

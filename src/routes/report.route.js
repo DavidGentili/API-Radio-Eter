@@ -10,8 +10,8 @@ router.use('/report', (req , res, next) => {
 })
 
 router.get('/report', (req, res) => {
-    const { id, title, active, creatorId, creatorName } = req.query;
-    getReport({ id, title, active, creatorId, creatorName })
+    const { id, title, active, creatorId, creatorName, tags } = req.query;
+    getReport({ id, title, active, creatorId, creatorName, tags })
     .then(response => {
         res.status = 200;
         res.json(response);
@@ -22,10 +22,10 @@ router.get('/report', (req, res) => {
 })
 
 router.post('/report', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const { title, description, content, active = true, mainMediaUrl} = req.body;
+    const { title, description, content, active = true, mainMediaUrl, tags} = req.body;
     const creatorId = req.user.id;
     const creatorName = req.user.name;
-    const reportData = { title, description, content, active, mainMediaUrl, creatorId, creatorName}
+    const reportData = { title, description, content, active, mainMediaUrl, creatorId, creatorName, tags}
     createReport(reportData)
     .then(response => {
         res.status = 200;
