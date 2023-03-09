@@ -1,5 +1,6 @@
 import { checkNewEpisodeData, checkUpdateEpisodeData } from '../helpers/checkData/checkEpisode';
 import { getQueryParams } from '../helpers/formatData';
+const { formatObjectResponse } = require('../helpers/formatData');
 import { createElement, deleteElement, getElementById, getElements, updateElement } from './element.controller';
 const Episode = require('../models/Episode');
 
@@ -11,6 +12,18 @@ export async function getEpisodes(query) {
 
 export async function getEpisodeById(id) {
     return await getElementById(id, Episode);
+}
+
+export async function getEpisodesByColleciontOfIds(ids) {
+    try{
+        const episodes = await Episode.find({
+            _id : { $in : ids.map(id => new mongoose.Types.ObjectId(id))}
+        })
+        const formatResponse = Array.isArray(episodes) ? episodes.map(episode => formatObjectResponse(episode)) : [formatObjectResponse(episodes)];
+        return formatResponse;
+    } catch(e) {
+        throw { code: 400, response: { message: 'Error al consultar el programa ' } };
+    }
 }
 
 export async function createEpisode(episodeData) {
