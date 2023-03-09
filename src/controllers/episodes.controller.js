@@ -26,6 +26,22 @@ export async function getEpisodesByColleciontOfIds(ids) {
     }
 }
 
+export async function getLatestEpisode(cant) {
+    try{
+        const episodes = await getElements({}, Episode);
+        episodes.sort((a, b) => {
+            return b.createdAt - a.createdAt;
+        })
+        const res = [];
+        for(let i = 0 ; i < cant ; i++)
+            res.push(episodes.shift());
+        return res;
+        
+    } catch(e) {
+        throw { code: 400, response: { message: 'Error al consultar el programa ' } };
+    }
+}
+
 export async function createEpisode(episodeData) {
     const check = checkNewEpisodeData(episodeData);
     if (check !== true)
