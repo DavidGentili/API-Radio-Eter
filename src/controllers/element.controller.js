@@ -31,7 +31,7 @@ const getElementById = async (elementId, Model) => {
     if(!elementId || !checkId(elementId))
         throw {code: 500, response: { message: 'numero de id incorrecto'}};
     try{
-     const element = Model.findById(elementId).lean();
+     const element = await Model.findById(elementId).lean();
      return formatObjectResponse(element);
     }catch(e){
         throw { code : 500, response : { message : 'Error al consultar el elemento'}}
@@ -48,7 +48,8 @@ const createElement = async ( dataElement, Model ) => {
     try{
         const newElement = new Model(dataElement);
         await newElement.save();
-        return formatObjectResponse(newElement);
+        const current = await Model.findById(newElement.id).lean();
+        return formatObjectResponse(current);
 
     } catch(e){
         throw { code : 500, response : { message : 'Error al crear el elemento'}}
@@ -67,7 +68,8 @@ const updateElement = async (elementData, elementId, Model) => {
     if(!elementId || !checkId(elementId) )
         throw {code: 400, response: { message: 'Parametros incorrectos'}};
     try{
-        const updated = await Model.findByIdAndUpdate(elementId, elementData);
+        await Model.findByIdAndUpdate(elementId, elementData);
+        const updated = await Model.findById(elementId).lean();
         return formatObjectResponse(updated);
     } catch(e){
         throw { code : 500, response : { message : 'Error al actualizar el elemento'}}
@@ -87,7 +89,7 @@ const deleteElement = async (elementId, Model) => {
     if(!element)
         throw {code: 400, response: { message: 'numero de id incorrecto'}};       
     try{
-        const deleted = await Model.findByIdAndDelete(elementId);
+        const deleted = await Model.findByIdAndDelete(elementId).lean();
         return formatObjectResponse(deleted)
     }catch(e){
         throw { code : 500, response : { message : 'Error al eliminar el elemento'}}

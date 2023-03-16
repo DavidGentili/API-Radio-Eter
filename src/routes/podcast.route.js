@@ -25,7 +25,8 @@ router.get('/podcast', (req, res) => {
 
 router.post('/podcast', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { title, description, tags, urls, imgUrl, active } = req.body;
-    createPodcast({ title, description, tags, urls, imgUrl, episodeId, active })
+
+    createPodcast({ title, description, tags, urls, imgUrl, active })
     .then(response => {
         res.status = 200;
         res.json(response);

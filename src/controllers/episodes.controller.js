@@ -1,20 +1,20 @@
-import { checkNewEpisodeData, checkUpdateEpisodeData } from '../helpers/checkData/checkEpisode';
-import { getQueryParams } from '../helpers/formatData';
+const { checkNewEpisodeData, checkUpdateEpisodeData } = require('../helpers/checkData/checkEpisode');
+const { getQueryParams } = require('../helpers/formatData');
 const { formatObjectResponse } = require('../helpers/formatData');
-import { createElement, deleteElement, getElementById, getElements, updateElement } from './element.controller';
+const { createElement, deleteElement, getElementById, getElements, updateElement } = require('./element.controller');
 const Episode = require('../models/Episode');
 
-export async function getEpisodes(query) {
+async function getEpisodes(query) {
     const queryParams = getQueryParams(query);
     return await getElements(queryParams, Episode);
 }
 
 
-export async function getEpisodeById(id) {
+async function getEpisodeById(id) {
     return await getElementById(id, Episode);
 }
 
-export async function getEpisodesByColleciontOfIds(ids) {
+async function getEpisodesByColleciontOfIds(ids) {
     try{
         const episodes = await Episode.find({
             _id : { $in : ids.map(id => new mongoose.Types.ObjectId(id))}
@@ -26,7 +26,7 @@ export async function getEpisodesByColleciontOfIds(ids) {
     }
 }
 
-export async function getLatestEpisode(cant) {
+async function getLatestEpisode(cant) {
     try{
         const episodes = await getElements({}, Episode);
         episodes.sort((a, b) => {
@@ -42,7 +42,7 @@ export async function getLatestEpisode(cant) {
     }
 }
 
-export async function createEpisode(episodeData) {
+async function createEpisode(episodeData) {
     const check = checkNewEpisodeData(episodeData);
     if (check !== true)
         throw { code: 400, response: { message: `Se ha ingresado un ${check} incorrecto` } }
@@ -53,7 +53,7 @@ export async function createEpisode(episodeData) {
     }
 }
 
-export async function updateEpisode(id, episodeData) {
+async function updateEpisode(id, episodeData) {
     const check = checkUpdateEpisodeData(episodeData);
     if (check !== true)
         throw { code: 400, response: { message: `Se ha ingresado un ${check} incorrecto` } }
@@ -64,10 +64,20 @@ export async function updateEpisode(id, episodeData) {
     }
 }
 
-export async function deleteEpisode(id) {
+async function deleteEpisode(id) {
     try{
         return await deleteElement(id, Episode);
     }catch(e){
         throw { code : 400, response : { message : 'Error al eliminar el programa '}};
     }
+}
+
+module.exports = {
+    getEpisodes,
+    getEpisodeById,
+    getEpisodesByColleciontOfIds,
+    getLatestEpisode,
+    createEpisode,
+    updateEpisode,
+    deleteEpisode,
 }

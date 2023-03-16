@@ -8,7 +8,7 @@ const PodcastSchema = new Schema({
     tags: { type: [String] },
     urls: { type: SourceSchema },
     imgUrl: { type: String },
-    episodesId: { type: [String] },
+    episodesId: { type: [String], default : [] },
     active : { type : Boolean, required : true, default : true},
 
 }, {

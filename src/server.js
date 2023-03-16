@@ -23,6 +23,8 @@ app.use(require('./routes/specialTransmission.route'));
 app.use(require('./routes/programGrid.route'));
 app.use(require('./routes/media.route'));
 app.use(require('./routes/report.route'));
+app.use(require('./routes/podcast.route'));
+app.use(require('./routes/episode.router'));
 
 
 app.set('port', port || 9000)
