@@ -24,6 +24,10 @@ const getQueryParams = (object) => {
         if(typeof(object[key]) !== 'undefined' && typeof(object[key]) !== 'null')
             queryParams[key] = object[key];
     });
+    if(queryParams.id) {
+        queryParams._id = queryParams.id;
+        delete queryParams.id;
+    }
     return queryParams;
 }
 

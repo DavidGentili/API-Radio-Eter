@@ -28,7 +28,7 @@ const signupUser = async (userData) => {
         throw {code: 400, response: {message: `Se ha ingresado un ${check} incorrecto`}};
     const {email, name } = userData;
     const currentUser = getUsers({ email }, User);
-    if(currentUser && currentUser[0] && currentUser[0].email && currentUser[0].email == email)
+    if(currentUser && currentUser[0] && currentUser[0].email && currentUser[0].email === email)
         throw {code: 400, response: {message: 'El email que intenta registrar ya se encuentra registrado'}};
     try{
         const password = generator.generate({length: 10, numbers: true});
