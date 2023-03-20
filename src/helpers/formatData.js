@@ -24,6 +24,10 @@ const getQueryParams = (object) => {
         if(typeof(object[key]) !== 'undefined' && typeof(object[key]) !== 'null')
             queryParams[key] = object[key];
     });
+    if(queryParams.id) {
+        queryParams._id = queryParams.id;
+        delete queryParams.id;
+    }
     return queryParams;
 }
 
@@ -33,7 +37,7 @@ const formatObjectResponse = (object) => {
     const keys = Object.keys(object);
     const exceptions = ['_id', 'password', '__v'];
     const newObject = {};
-    newObject.id = object.id || object._id;
+    newObject.id = object.id || object._id.toString();
     keys.forEach(key => {
         if(!exceptions.includes(key))
             newObject[key] = object[key];
