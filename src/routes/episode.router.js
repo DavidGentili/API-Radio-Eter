@@ -15,8 +15,8 @@ router.use('/episodes/withPodcast', (req, res, next) => {
 })
 
 router.put('/episode', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const { episodeId, title, description, urls, imgUrl, order, active } = req.body;
-    updateEpisode(episodeId, { title, description, urls, imgUrl, order, active })
+    const { episodeId, title, description, urls, imgUrl, active = true } = req.body;
+    updateEpisode(episodeId, { title, description, urls, imgUrl, active })
         .then(response => {
             res.status = 200;
             res.json(response);

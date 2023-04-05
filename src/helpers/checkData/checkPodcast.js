@@ -12,6 +12,7 @@ const podcastKeys = [
     'urls',
     'imgUrl',
     'active',
+    'episodesId'
 ]
 
 

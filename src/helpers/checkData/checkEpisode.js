@@ -11,33 +11,30 @@ const episodeKeys = [
     'tags',
     'urls',
     'imgUrl',
-    'order',
     'active',
 ]
 
 
 function checkNewEpisodeData(episodeData) {
-    const { title, description, tags, urls, imgUrl, order, active } = episodeData;
+    const { title, description, tags, urls, imgUrl, active } = episodeData;
     if(!checkParameters(episodeData, episodeKeys)) return 'parametros';
     if(!title || !checkName(title)) return 'Titulo';
     if(description && !isString(description)) return 'Descripcion';
     if(tags && !checkTags) return 'Etiquetas';
     if(urls && !checkUrl) return 'Links';
     if(imgUrl && !isString(imgUrl)) return 'Imagen';
-    if(order === undefined || !isNumber(order)) return 'Orden';
     if(active !== undefined && !Boolean(active)) return 'Activo';
 
     return true;
 }
 
 function checkUpdateEpisodeData(episodeData) {
-    const { title, description, tags, urls, imgUrl, order } = episodeData;
+    const { title, description, tags, urls, imgUrl } = episodeData;
     if(title && !checkName(title)) return 'Titulo';
     if(description && !isString(description)) return 'Descripcion';
     if(tags && !checkTags) return 'Etiquetas';
     if(urls && !checkUrl) return 'Links';
     if(imgUrl && !isString(imgUrl)) return 'Imagen';
-    if(order && !isNumber(order)) return 'Orden';
     return true;
 }
 
