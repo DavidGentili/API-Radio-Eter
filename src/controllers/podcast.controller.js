@@ -32,14 +32,12 @@ async function createPodcast(podcastData) {
 }
 
 async function updatePodcast(podcastdata, id) {
-    console.log(podcastdata)
     const check = checkUpdatePodcastData(podcastdata);
     if (check !== true)
         throw { code: 400, response: { message: `Se ha ingresado un ${check} incorrecto` } }
     try {
         return await updateElement(podcastdata, id, Podcast);
     } catch (e) {
-        console.log(e)
         throw { code: 400, response: { message: 'Error al actualizar el podcast ' } };
     }
 }
