@@ -23,7 +23,7 @@ function checkNewEpisodeData(episodeData) {
     if(description && !isString(description)) return 'Descripcion';
     if(tags && !checkTags) return 'Etiquetas';
     if(urls && !checkUrl) return 'Links';
-    if(imgUrl && !isArray(imgUrl)) return 'Imagen';
+    if(imgUrl && !isString(imgUrl)) return 'Imagen';
     if(order === undefined || !isNumber(order)) return 'Orden';
     if(active !== undefined && !Boolean(active)) return 'Activo';
 
@@ -36,7 +36,7 @@ function checkUpdateEpisodeData(episodeData) {
     if(description && !isString(description)) return 'Descripcion';
     if(tags && !checkTags) return 'Etiquetas';
     if(urls && !checkUrl) return 'Links';
-    if(imgUrl && !isArray(imgUrl)) return 'Imagen';
+    if(imgUrl && !isString(imgUrl)) return 'Imagen';
     if(order && !isNumber(order)) return 'Orden';
     return true;
 }

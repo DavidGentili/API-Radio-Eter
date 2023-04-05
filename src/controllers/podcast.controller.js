@@ -11,7 +11,7 @@ const { createEpisode, deleteEpisode, getEpisodesByColleciontOfIds } = require('
 
 const Podcast = require('../models/Podcast');
 
-async function getPodcast(query) {
+const getPodcast= async (query) => {
     const queryParams = getQueryParams(query);
     return await getElements(queryParams, Podcast);
 }
@@ -55,6 +55,8 @@ async function addEpisode(podcastId, episodeData) {
         const podcast = await getPodcastById(podcastId);
         if (!podcast)
             throw 'No existe el podcast ingresado';
+        if(!episodeData.order)
+            episodeData.order = podcast.episodesId.length;
         const episode = await createEpisode(episodeData);
         const { id } = podcast;
         const updatedData = { episodesId: [...podcast.episodesId, episode.id] };
@@ -89,6 +91,23 @@ async function getEpisodesOfPodcast(podcastId) {
     }
 }
 
+async function getEpisodesWithPodcast() {
+    try{
+        const podcasts = await getPodcast({});
+        const episodes = [];
+        for(const podcast of podcasts){
+            const auxEp = await getEpisodesByColleciontOfIds(podcast.episodesId);
+            const aux = auxEp.map(ep => ({...ep, podcastTitle : podcast.title, podcastId : podcast.id}));
+            episodes.push(...aux);
+        }
+        return episodes;
+    } catch(e) {
+        console.log(e)
+        throw { code: 400, response: { message: 'Error al consultar el episodio ' } };
+    }
+}
+
+
 module.exports = {
     getPodcast,
     getPodcastById,
@@ -97,5 +116,6 @@ module.exports = {
     deletePodcast,
     addEpisode,
     removeEpisode,
-    getEpisodesOfPodcast
+    getEpisodesOfPodcast,
+    getEpisodesWithPodcast,
 }

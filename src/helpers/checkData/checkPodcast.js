@@ -22,7 +22,7 @@ function checkNewPodcastData(podcastData) {
     if(description && !isString(description)) return 'Descripcion';
     if(tags && !checkTags) return 'Etiquetas';
     if(urls && !checkUrl) return 'Links';
-    if(imgUrl && !isArray(imgUrl)) return 'Imagen';
+    if(imgUrl && !isString(imgUrl)) return 'Imagen';
     if(active && !isBoolean(active)) return 'activo'
     return true;
 }
@@ -34,7 +34,7 @@ function checkUpdatePodcastData(podcastData) {
     if(description && !isString(description)) return 'Descripcion';
     if(tags && !checkTags) return 'Etiquetas';
     if(urls && !checkUrl) return 'Links';
-    if(imgUrl && !isArray(imgUrl)) return 'Imagen';
+    if(imgUrl && !isString(imgUrl)) return 'Imagen';
     if(active && !isBoolean(active)) return 'activo'
     return true
 }
