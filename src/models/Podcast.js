@@ -2,13 +2,19 @@ const mongoose = require('mongoose');
 const SourceSchema = require('./SourceSchema');
 const Schema = mongoose.Schema;
 
+
+const episodeElementSchema = new Schema({
+    episodeId : {type: String, required: true},
+    order : { type: Number},
+})
+
 const PodcastSchema = new Schema({
     title: { type: String, required: true },
     description: { type: String },
     tags: { type: [String] },
     urls: { type: SourceSchema },
     imgUrl: { type: String },
-    episodesId: { type: [String], default : [] },
+    episodesId: { type: [episodeElementSchema], default : [] },
     active : { type : Boolean, required : true, default : true},
 
 }, {

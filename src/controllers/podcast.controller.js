@@ -11,7 +11,7 @@ const { createEpisode, deleteEpisode, getEpisodesByColleciontOfIds } = require('
 
 const Podcast = require('../models/Podcast');
 
-async function getPodcast(query) {
+const getPodcast = async (query) => {
     const queryParams = getQueryParams(query);
     return await getElements(queryParams, Podcast);
 }
@@ -57,7 +57,12 @@ async function addEpisode(podcastId, episodeData) {
             throw 'No existe el podcast ingresado';
         const episode = await createEpisode(episodeData);
         const { id } = podcast;
-        const updatedData = { episodesId: [...podcast.episodesId, episode.id] };
+        const order = podcast.episodesId.length;
+        const newEpisode = {
+            episodeId: episode.id,
+            order,
+        }
+        const updatedData = { episodesId: [...podcast.episodesId, newEpisode] };
         return await updateElement(updatedData, id, Podcast);
     } catch (e) {
         throw { code: 400, response: { message: 'Error al agregar el programa al podcast' } };
@@ -70,7 +75,7 @@ async function removeEpisode(podcastId, episodeId) {
         if (!podcast)
             throw 'No existe el podcast ingresado';
         await deleteEpisode(episodeId);
-        const updatedData = podcast.episodesId.filter(episode => episode !== episodeId);
+        const updatedData = podcast.episodesId.filter(ep => ep.episodeId !== episodeId);
         return await updateElement(updatedData, podcast.id, Podcast);
     } catch (e) {
         throw { code: 400, response: { message: 'Error al eliminar el programa del podcast' } };
@@ -82,12 +87,35 @@ async function getEpisodesOfPodcast(podcastId) {
         const podcast = await getPodcastById(podcastId);
         if (!podcast)
             throw 'No existe el podcast ingresado';
-        const episodes = await getEpisodesByColleciontOfIds(podcast.episodesId);
-        return episodes;
+        const ids = podcast.episodesId.map(ep => ep.episodeId);
+        const episodes = await getEpisodesByColleciontOfIds(ids);
+        const res = episodes.map(ep => {
+            const auxEp = podcast.episodesId.find(episode => episode.episodeId === ep.id);
+            return auxEp ? { ...ep, order : auxEp.order} : ep;
+        })
+        return res;
     } catch (e) {
         throw { code: 400, response: { message: 'Error al buscar los programas del podcast' } };
     }
 }
+
+async function getEpisodesWithPodcast() {
+    try {
+        const podcasts = await getPodcast({});
+        const episodes = [];
+        for (const podcast of podcasts) {
+            const ids = podcast.episodesId.map(ep => ep.episodeId);
+            const auxEp = await getEpisodesByColleciontOfIds(ids);
+            const aux = auxEp.map(ep => ({ ...ep, podcastTitle: podcast.title, podcastId: podcast.id }));
+            episodes.push(...aux);
+        }
+        return episodes;
+    } catch (e) {
+        console.log(e)
+        throw { code: 400, response: { message: 'Error al consultar el episodio ' } };
+    }
+}
+
 
 module.exports = {
     getPodcast,
@@ -97,5 +125,6 @@ module.exports = {
     deletePodcast,
     addEpisode,
     removeEpisode,
-    getEpisodesOfPodcast
+    getEpisodesOfPodcast,
+    getEpisodesWithPodcast,
 }

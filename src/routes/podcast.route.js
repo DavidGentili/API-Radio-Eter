@@ -37,8 +37,8 @@ router.post('/podcast', isAuthenticated, correctSecurityLevel, (req, res) => {
 })
 
 router.put('/podcast', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const { podcastId, title, description, tags, urls, imgUrl, active } = req.body;
-    updatePodcast({ title, description, tags, urls, imgUrl, active }, podcastId)
+    const { podcastId, title, description, tags, urls, imgUrl, active, episodesId } = req.body;
+    updatePodcast({ title, description, tags, urls, imgUrl, active, episodesId }, podcastId)
     .then(response => {
         res.status = 200;
         res.json(response);
@@ -61,8 +61,8 @@ router.delete('/podcast', isAuthenticated, correctSecurityLevel, (req, res) => {
 })
 
 router.post('/podcast/episode', isAuthenticated, correctSecurityLevel, (req, res) => {
-    const { podcastId, title, description, urls, imgUrl, order, active } = req.body;
-    addEpisode(podcastId, { title, description, urls, imgUrl, order, active })
+    const { podcastId, title, description, urls, imgUrl, active = true } = req.body;
+    addEpisode(podcastId, { title, description, urls, imgUrl, active })
     .then(response => {
         res.status = 200;
         res.json(response);
@@ -85,7 +85,7 @@ router.delete('/podcast/episode', isAuthenticated, correctSecurityLevel, (req, r
 })
 
 router.get('/podcast/episode', (req, res) => {
-    const { podcastId } = req.body;
+    const { podcastId } = req.query;
     getEpisodesOfPodcast(podcastId)
     .then(response => {
         res.status = 200;

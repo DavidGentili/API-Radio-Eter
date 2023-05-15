@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const { checkNewEpisodeData, checkUpdateEpisodeData } = require('../helpers/checkData/checkEpisode');
 const { getQueryParams } = require('../helpers/formatData');
 const { formatObjectResponse } = require('../helpers/formatData');
@@ -18,11 +19,12 @@ async function getEpisodesByColleciontOfIds(ids) {
     try{
         const episodes = await Episode.find({
             _id : { $in : ids.map(id => new mongoose.Types.ObjectId(id))}
-        })
+        }).lean()
         const formatResponse = Array.isArray(episodes) ? episodes.map(episode => formatObjectResponse(episode)) : [formatObjectResponse(episodes)];
         return formatResponse;
     } catch(e) {
-        throw { code: 400, response: { message: 'Error al consultar el programa ' } };
+        console.log(e)
+        throw { code: 400, response: { message: 'Error al consultar el episodio ' } };
     }
 }
 
@@ -38,7 +40,7 @@ async function getLatestEpisode(cant) {
         return res;
         
     } catch(e) {
-        throw { code: 400, response: { message: 'Error al consultar el programa ' } };
+        throw { code: 400, response: { message: 'Error al consultar el episodio ' } };
     }
 }
 
@@ -49,7 +51,7 @@ async function createEpisode(episodeData) {
     try {
         return await createElement(episodeData, Episode);
     } catch (e) {
-        throw { code: 400, response: { message: 'Error al crear el programa ' } };
+        throw { code: 400, response: { message: 'Error al crear el episodio ' } };
     }
 }
 
@@ -60,7 +62,7 @@ async function updateEpisode(id, episodeData) {
     try {
         return await updateElement(episodeData, id, Episode);
     } catch (e) {
-        throw { code: 400, response: { message: 'Error al crear el programa ' } };
+        throw { code: 400, response: { message: 'Error al crear el episodio ' } };
     }
 }
 
@@ -68,7 +70,7 @@ async function deleteEpisode(id) {
     try{
         return await deleteElement(id, Episode);
     }catch(e){
-        throw { code : 400, response : { message : 'Error al eliminar el programa '}};
+        throw { code : 400, response : { message : 'Error al eliminar el episodio '}};
     }
 }
 
