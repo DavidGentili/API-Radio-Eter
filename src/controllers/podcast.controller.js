@@ -20,6 +20,11 @@ async function getPodcastById(id) {
     return await getElementById(id, Podcast);
 }
 
+async function getLatestPodcast() {
+    const podcast = await getPodcast({});
+    return podcast.reverse().slice(0, 3);
+}
+
 async function createPodcast(podcastData) {
     const check = checkNewPodcastData(podcastData);
     if (check !== true)
@@ -91,7 +96,7 @@ async function getEpisodesOfPodcast(podcastId) {
         const episodes = await getEpisodesByColleciontOfIds(ids);
         const res = episodes.map(ep => {
             const auxEp = podcast.episodesId.find(episode => episode.episodeId === ep.id);
-            return auxEp ? { ...ep, order : auxEp.order} : ep;
+            return auxEp ? { ...ep, order: auxEp.order } : ep;
         })
         return res;
     } catch (e) {
@@ -116,10 +121,45 @@ async function getEpisodesWithPodcast() {
     }
 }
 
+async function getLatestEpisodesWithPodcast(size = 3) {
+    try {
+        const episodes = await getEpisodesWithPodcast();
+        episodes.sort((a, b) => {
+            return b.createdAt - a.createdAt;
+        })
+        const res = [];
+        for (let i = 0; i < size; i++)
+            if (episodes[0])
+                res.push(episodes.shift());
+        return res;
+    } catch (e) {
+        console.log(e)
+        throw { code: 400, response: { message: 'Error al consultar el episodio ' } };
+    }
+}
+
+async function getPodcastWithEpisodes(podcastId) {
+    try {
+        const podcast = await getPodcastById(podcastId);
+        if (!podcast)
+            throw { code: 400, response: { message: 'Error, el podcast solicitado no existe' } }
+        const episodes = await getEpisodesOfPodcast(podcastId);
+        const { id, title, description, tags, urls, imgUrl, active } = podcast;
+        return {
+            id, title, description, tags, urls, imgUrl, active,
+            episodes
+        };
+    } catch (e) {
+        throw { code: 400, response: { message: 'Error al consultar el podcast ' } };
+    }
+}
+
+
 
 module.exports = {
     getPodcast,
     getPodcastById,
+    getLatestPodcast,
     createPodcast,
     updatePodcast,
     deletePodcast,
@@ -127,4 +167,6 @@ module.exports = {
     removeEpisode,
     getEpisodesOfPodcast,
     getEpisodesWithPodcast,
+    getLatestEpisodesWithPodcast,
+    getPodcastWithEpisodes
 }

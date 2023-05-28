@@ -16,34 +16,34 @@ async function getEpisodeById(id) {
 }
 
 async function getEpisodesByColleciontOfIds(ids) {
-    try{
+    try {
         const episodes = await Episode.find({
-            _id : { $in : ids.map(id => new mongoose.Types.ObjectId(id))}
+            _id: { $in: ids.map(id => new mongoose.Types.ObjectId(id)) }
         }).lean()
         const formatResponse = Array.isArray(episodes) ? episodes.map(episode => formatObjectResponse(episode)) : [formatObjectResponse(episodes)];
         return formatResponse;
-    } catch(e) {
+    } catch (e) {
         console.log(e)
         throw { code: 400, response: { message: 'Error al consultar el episodio ' } };
     }
 }
 
 async function getLatestEpisode(cant) {
-    try{
+    try {
         const episodes = await getElements({}, Episode);
         episodes.sort((a, b) => {
             return b.createdAt - a.createdAt;
         })
         const res = [];
-        for(let i = 0 ; i < cant ; i++)
-            res.push(episodes.shift());
+        for (let i = 0; i < cant; i++)
+            if (episodes[0])
+                res.push(episodes.shift());
         return res;
-        
-    } catch(e) {
+
+    } catch (e) {
         throw { code: 400, response: { message: 'Error al consultar el episodio ' } };
     }
 }
-
 async function createEpisode(episodeData) {
     const check = checkNewEpisodeData(episodeData);
     if (check !== true)
@@ -67,10 +67,10 @@ async function updateEpisode(id, episodeData) {
 }
 
 async function deleteEpisode(id) {
-    try{
+    try {
         return await deleteElement(id, Episode);
-    }catch(e){
-        throw { code : 400, response : { message : 'Error al eliminar el episodio '}};
+    } catch (e) {
+        throw { code: 400, response: { message: 'Error al eliminar el episodio ' } };
     }
 }
 

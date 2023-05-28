@@ -1,4 +1,4 @@
-const { getPodcast, createPodcast, updatePodcast, deletePodcast, addEpisode, removeEpisode, getEpisodesOfPodcast } = require('../controllers/podcast.controller');
+const { getPodcast, getLatestPodcast, createPodcast, updatePodcast, deletePodcast, addEpisode, removeEpisode, getEpisodesOfPodcast, getPodcastWithEpisodes } = require('../controllers/podcast.controller');
 const responseCodeError = require('../helpers/responseCodeError');
 const { isAuthenticated, correctSecurityLevel } = require('../middlewares/users.middlewares');
 
@@ -87,6 +87,29 @@ router.delete('/podcast/episode', isAuthenticated, correctSecurityLevel, (req, r
 router.get('/podcast/episode', (req, res) => {
     const { podcastId } = req.query;
     getEpisodesOfPodcast(podcastId)
+    .then(response => {
+        res.status = 200;
+        res.json(response);
+    })
+    .catch(e => {
+        responseCodeError(e, res);
+    })
+})
+
+router.get('/podcast/last', (req, res) => {
+    getLatestPodcast
+    .then(response => {
+        res.status = 200;
+        res.json(response);
+    })
+    .catch(e => {
+        responseCodeError(e, res);
+    })
+})
+
+router.get('/podcast/withepisodes', (req, res) => {
+    const { podcastId } = req.query;
+    getPodcastWithEpisodes(podcastId)
     .then(response => {
         res.status = 200;
         res.json(response);
