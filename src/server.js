@@ -30,7 +30,6 @@ app.use(require('./routes/episode.router'));
 app.set('port', port || 9000)
 
 app.get('/', (req,res) => {
-    console.log(__dirname);
     res.json({message: 'welcome to the Radio Eter MDP API'})
 })
 
