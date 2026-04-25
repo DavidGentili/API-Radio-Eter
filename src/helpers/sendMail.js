@@ -2,9 +2,28 @@ const nodemailer = require('nodemailer');
 const { userEmail, passwordEmail } = require('../config');
 const { newAccountMessage, changePasswordMessage } = require('./htmlMessages');
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const normalizeHeaderValue = (value = '') => String(value).replace(/[\r\n]+/g, ' ').trim();
+const normalizeBodyValue = (value = '') => String(value).replace(/\r/g, '').trim();
+
+const normalizeRecipient = (recipient = '') => {
+    const value = String(recipient).trim();
+    if (!EMAIL_REGEX.test(value))
+        throw new Error('Invalid recipient email');
+
+    return value.toLowerCase();
+}
+
 const sendMail = async ({to, subject, text, html}) => {
     if(!userEmail || !passwordEmail)
-        throw 'Error in environment variables'
+        throw new Error('Error in environment variables');
+
+    const safeTo = normalizeRecipient(to);
+    const safeSubject = normalizeHeaderValue(subject);
+    const safeText = normalizeBodyValue(text);
+    const safeHtml = typeof html === 'string' ? html : '';
+
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 465,
@@ -16,11 +35,11 @@ const sendMail = async ({to, subject, text, html}) => {
     });
 
     await transporter.sendMail({
-        from: 'David Gentili <davidezequielgentili@gmail.com',
-        to,
-        subject,
-        text,
-        html,
+        from: 'David Gentili <davidezequielgentili@gmail.com>',
+        to: safeTo,
+        subject: safeSubject,
+        text: safeText,
+        html: safeHtml,
     });
 }
 

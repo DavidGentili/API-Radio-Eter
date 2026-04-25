@@ -25,6 +25,7 @@ app.use(require('./routes/media.route'));
 app.use(require('./routes/report.route'));
 app.use(require('./routes/podcast.route'));
 app.use(require('./routes/episode.router'));
+app.use(require('./routes/platformContent.router'));
 
 
 app.set('port', port || 9000)
