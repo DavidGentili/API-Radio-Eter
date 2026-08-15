@@ -14,6 +14,7 @@ const CarrouselContentSchema = new Schema({
 const PlatformContentSchema = new Schema({
     name: { type: String, required: true },
     type: { type: String, required: true },
+    code: { type: String, required: true },
     contents: { type: [CarrouselContentSchema], default: [] },
 }, {
     timestamps: true,
