@@ -1,7 +1,10 @@
 const router = require('express').Router();
 const { isAuthenticated, correctSecurityLevel } = require('../middlewares/users.middlewares');
 const responseCodeError = require('../helpers/responseCodeError');
-const { getPlatformContent, getPlatformContentById, getPlatformContentByName, createPlatformContent, updatePlatformContent, deletePlatformContent, addContent, removeContent } = require('../controllers/platformContent.controller');
+const { 
+    getPlatformContent, getPlatformContentById, getPlatformContentByName, createPlatformContent, 
+    updatePlatformContent, deletePlatformContent, addContent, removeContent, getPlatformContentByCode 
+} = require('../controllers/platformContent.controller');
 
 
 router.use('/platform-content', (req, res, next) => {
@@ -24,6 +27,18 @@ router.get('/platform-content', isAuthenticated, correctSecurityLevel, (req, res
 router.get('/platform-content/name/:name', (req, res) => {
     const { name } = req.params;
     getPlatformContentByName(name)
+        .then(response => {
+            res.status = 200;
+            res.json(response);
+        })
+        .catch(e => {
+            responseCodeError(e, res)
+        })
+})
+
+router.get('/platform-content/code/:code', (req, res) => {
+    const { code } = req.params;
+    getPlatformContentByCode(code)
         .then(response => {
             res.status = 200;
             res.json(response);

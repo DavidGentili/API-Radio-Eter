@@ -2,6 +2,7 @@ const { createElement, deleteElement, getElementById, getElements, updateElement
 const { getQueryParams } = require('../helpers/formatData');
 const PlatformContent = require('../models/PlatformContent');
 const { checkNewPlatformContentData, checkUpdatePlatformContentData, checkContent } = require('../helpers/checkData/checkPlatformContentData');
+const { generateRandomCode } = require('../helpers/random');
 
 
 
@@ -31,12 +32,22 @@ async function getPlatformContentByName(name) {
     }
 }
 
+async function getPlatformContentByCode(code) {
+    try {
+        const platformContent = await getElements({ code }, PlatformContent);
+        return platformContent?.pop() || null;
+    } catch (e) {
+        throw { code: 500, response: { message: 'Error al consultar el contenido de la plataforma ' } };
+    }
+}
+
 async function createPlatformContent(data) {
     try {
         const check = checkNewPlatformContentData(data);
         if (check !== true)
             throw { code: 400, response: { message: `Se ha ingresado un ${check} incorrecto` } }
-        return await createElement(data, PlatformContent);
+        const code = generateRandomCode();
+        return await createElement({ ...data, code }, PlatformContent);
     } catch (e) {
         console.log(e);
         throw { code: 500, response: { message: 'Error al crear el contenido de la plataforma ' } };
@@ -104,10 +115,14 @@ function addContentToPlatformContent(contents, content) {
     return contents;
 }
 
+
+
+
 module.exports = {
     getPlatformContent,
     getPlatformContentById,
     getPlatformContentByName,
+    getPlatformContentByCode,
     createPlatformContent,
     updatePlatformContent,
     deletePlatformContent,
