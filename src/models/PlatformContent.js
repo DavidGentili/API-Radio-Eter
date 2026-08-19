@@ -8,6 +8,7 @@ const CarrouselContentSchema = new Schema({
     src: { type: String, required: true },
     order: { type: Number, required: true },
     link: { type: String },
+    popup: { type: Boolean, default: false },
     active: { type: Boolean, default: true },
 })
 

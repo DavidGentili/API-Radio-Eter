@@ -74,8 +74,8 @@ router.post('/platform-content', isAuthenticated, correctSecurityLevel, (req, re
 
 router.post('/platform-content/:id/content', isAuthenticated, correctSecurityLevel, (req, res) => {
     const { id } = req.params;
-    const { title, src, order, link, active } = req.body;
-    const content = { title, src, order, link, active };
+    const { title, src, order, link, active, popup } = req.body;
+    const content = { title, src, order, link, active, popup };
     addContent(id, content)
         .then(response => {
             res.status = 200;
